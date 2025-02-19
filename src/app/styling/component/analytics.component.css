@@ -1,0 +1,92 @@
+.analytics-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.25rem;
+}
+
+.stat-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.stat-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.stat-card__title {
+  color: #999999;
+  font-size: 0.875rem;
+}
+.stat-card__value {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #292929;
+  margin-bottom: 0.5rem;
+}
+.stat-card__change {
+  font-size: 0.875rem;
+  color: #ff8383;
+}
+.stat-card__change.positive {
+  color: #22c55e;
+}
+
+.charts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.chart-card {
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: "0 4px 6px rgba(0, 0, 0, 0.07)";
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: "0 10px 15px rgba(0, 0, 0, 0.08)";
+}
+.chart-card__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #292929;
+  margin-bottom: 1.5rem;
+}
+.chart-card__content {
+  position: relative;
+  height: 200px;
+  width: 100%;
+}
+
+.trend-chart {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+.trend-chart .chart-card__content {
+  height: 250px;
+  width: 100%;
+  padding: 0.5rem;
+}
+.trend-chart canvas {
+  width: 100% !important;
+}

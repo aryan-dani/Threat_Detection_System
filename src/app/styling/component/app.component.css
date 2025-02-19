@@ -1,0 +1,27 @@
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, rgba(245, 245, 245, 0.8), rgba(245, 245, 245, 0.95));
+}
+
+.main-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  animation: fadeIn 0.3s ease-out;
+}
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

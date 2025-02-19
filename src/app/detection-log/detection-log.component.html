@@ -1,0 +1,62 @@
+<div class="detection-log">
+  <div class="detection-log__header">
+    <h2 class="detection-log__title">Detection Log</h2>
+    <button class="detection-log__filter-btn" (click)="toggleFilter()">
+      <span class="material-icons">filter_list</span>
+    </button>
+  </div>
+
+  <div class="detection-log__filters" *ngIf="isFilterOpen">
+    <div class="filter-group">
+      <label for="confidence">Confidence Threshold: {{confidenceThreshold * 100}}%</label>
+      <input
+        type="range"
+        id="confidence"
+        [(ngModel)]="confidenceThreshold"
+        min="0"
+        max="1"
+        step="0.1"
+      >
+    </div>
+    <div class="filter-group">
+      <label for="sort">Sort By</label>
+      <select id="sort" [(ngModel)]="sortBy">
+        <option value="time">Time</option>
+        <option value="confidence">Confidence</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="detection-log__list">
+    <div *ngFor="let detection of filteredDetections" class="detection-item">
+      <div class="detection-item__header" (click)="toggleExpanded(detection.id)">
+        <span class="material-icons detection-item__icon">warning</span>
+        <div class="detection-item__info">
+          <div class="detection-item__title">
+            <span>Weapon Detected</span>
+            <span class="material-icons">
+              {{expanded.includes(detection.id) ? 'expand_less' : 'expand_more'}}
+            </span>
+          </div>
+          <div class="detection-item__details">
+            <p>Location: {{detection.location}}</p>
+            <p>Time: {{detection.timestamp | date:'short'}}</p>
+            <p>Confidence: {{detection.confidence | percent}}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="expanded.includes(detection.id)" class="detection-item__image">
+        <img *ngIf="detection.imageUrl" [src]="detection.imageUrl" alt="Detection snapshot">
+        <p *ngIf="!detection.imageUrl" class="detection-item__no-image">
+          No image available for this detection
+        </p>
+      </div>
+    </div>
+
+    <div *ngIf="filteredDetections.length === 0" class="detection-log__empty">
+      <span class="material-icons">search_off</span>
+      <p>No detections found matching the current filters</p>
+    </div>
+  </div>
+</div>
