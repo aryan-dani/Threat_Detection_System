@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Weapon Detection System</title>
+</head>
+
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav__brand">
+                <a routerLink="/" class="nav__logo-link">
+                    <svg class="nav__logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
+                        </path>
+                    </svg>
+                    <h1 class="nav__title">Weapon Detection System</h1>
+                </a>
+            </div>
+
+            <button class="nav__mobile-toggle" (click)="toggleMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <ul class="nav__menu" [class.show]="isMenuOpen">
+                <li class="nav__menu-item">
+                    <a routerLink="/dashboard" 
+                       routerLinkActive="nav__link--active" 
+                       [routerLinkActiveOptions]="{exact: true}"
+                       class="nav__link">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav__menu-item">
+                    <a routerLink="/analytics" 
+                       routerLinkActive="nav__link--active"
+                       class="nav__link">
+                        Analytics
+                    </a>
+                </li>
+                <li class="nav__menu-item">
+                    <a routerLink="/reports" 
+                       routerLinkActive="nav__link--active"
+                       class="nav__link">
+                        Reports
+                    </a>
+                </li>
+                <li class="nav__menu-item">
+                    <a routerLink="/settings" 
+                       routerLinkActive="nav__link--active"
+                       class="nav__link">
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+</body>
+
+</html>

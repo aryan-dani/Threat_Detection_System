@@ -1,0 +1,51 @@
+$colors: (
+    'primary': #404040,    // Dark gray
+    'surface': #292929,    // Darker gray
+    'white': #ffffff,      // White
+    'gray': #999999,      // Medium gray
+    'success': #666666,    // Gray for success
+    'warning': #808080,    // Medium gray for warning
+    'danger': #333333,     // Dark gray for danger
+    'background': #f5f5f5, // Light gray
+    'accent': #595959,     // Gray accent
+    'red': #ff8383,        // Light red
+);
+
+$colors-dark: (
+  'background': #1a1a1a,
+  'surface': #292929,
+  'primary': #666666,
+  'white': #ffffff,
+  'gray': #999999,
+  'success': #808080,
+  'warning': #737373,
+  'danger': #4d4d4d,
+  'text': #f5f5f5,
+  'text-secondary': #999999,
+);
+
+$breakpoints: (
+    'mobile': 768px,
+);
+
+$transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+$max-width: 1440px;        // Increased max-width
+$header-height: 4rem;
+
+$card-colors: (
+    'active': #666666,
+    'inactive': #4d4d4d,
+    'hover': rgba(0, 0, 0, 0.05)
+);
+
+$grid-gap: 1.25rem;
+$card-radius: 1rem;        // More rounded corners
+$transition-speed: 0.2s;
+
+$shadows: (
+    'sm': '0 1px 2px rgba(0, 0, 0, 0.05)',
+    'md': '0 4px 6px rgba(0, 0, 0, 0.07)',
+    'lg': '0 10px 15px rgba(0, 0, 0, 0.08)',
+    'glow': '0 0 20px rgba(79, 70, 229, 0.15)', // Indigo glow
+    'inner': 'inset 0 2px 4px rgba(0, 0, 0, 0.06)'
+);

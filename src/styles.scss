@@ -1,0 +1,384 @@
+@import './app/styling/varibales';
+@import './app/styling/mixins';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+html, body { height: 100%; }
+body { 
+  margin: 0; 
+  font-family: 'Poppins', sans-serif; 
+  background: linear-gradient(
+    to bottom right,
+    rgba(245, 245, 245, 0.8),
+    rgba(245, 245, 245, 0.95)
+  );
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+// Premium Scrollbar
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    
+    &:hover {
+        background: rgba(0, 0, 0, 0.2);
+    }
+}
+
+// Premium Focus States
+:focus {
+    outline: 2px solid rgba(64, 64, 64, 0.5);
+    outline-offset: 2px;
+}
+
+// Override default focus styles
+*:focus {
+  outline: none !important;
+}
+
+button:focus, 
+a:focus, 
+input:focus, 
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+// For accessibility, add a subtle hover effect instead
+button:hover,
+a:hover {
+  opacity: 0.9;
+}
+
+// Premium Buttons
+button {
+    position: relative;
+    overflow: hidden;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translate(-50%, -50%) scale(0);
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+    }
+    
+    &:active::after {
+        transform: translate(-50%, -50%) scale(2);
+    }
+}
+
+// Add smooth page transitions
+.page-transition {
+  animation: fadeSlide 0.3s ease-out;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Add pulse animation for important elements
+.pulse-alert {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(77, 77, 77, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(77, 77, 77, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(77, 77, 77, 0); }
+}
+
+// Premium Button Styles
+.btn {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: all 0.3s ease;
+  background: linear-gradient(
+    135deg,
+    rgba(64, 64, 64, 0.95),
+    rgba(64, 64, 64, 0.8)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
+              0 0 10px rgba(map-get($colors, 'primary'), 0.1);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1),
+                0 0 15px rgba(64, 64, 64, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.btn-secondary {
+    background: linear-gradient(
+      135deg,
+      rgba(map-get($colors, 'surface'), 0.95),
+      rgba(map-get($colors, 'surface'), 0.8)
+    );
+  }
+
+  &.btn-outline {
+    background: transparent;
+    border: 2px solid currentColor;
+    
+    &:hover {
+      background: rgba(map-get($colors, 'primary'), 0.1);
+    }
+  }
+}
+
+// Rich Card Styles
+.card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05),
+              0 10px 15px rgba(0, 0, 0, 0.025);
+}
+
+// Dark Theme Styles
+.dark-theme {
+  background: linear-gradient(
+    to bottom right,
+    rgba(15, 23, 42, 0.95),
+    rgba(15, 23, 42, 0.98)
+  );
+  color: #f1f5f9;
+
+  .card, 
+  .chart-card, 
+  .detection-log {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .stat-card {
+    background: rgba(30, 41, 59, 0.9);
+    color: #f1f5f9;
+  }
+
+  .nav__link {
+    color: #94a3b8;
+    
+    &:hover {
+      color: #ffffff;
+    }
+  }
+
+  input, select {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #f1f5f9;
+  }
+}
+
+// Modern Search Panel
+.search-panel {
+  position: fixed;
+  top: $header-height;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  max-width: 90vw;
+  background: white;
+  border-radius: $card-radius;
+  box-shadow: map-get($shadows, 'lg');
+  z-index: 40;
+  padding: 1rem;
+  
+  .dark-theme & {
+    background: rgba(30, 41, 59, 0.95);
+  }
+}
+
+// Enhanced Search Bar
+.search-bar {
+  position: relative;
+  width: 300px;
+  
+  .search-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    padding-left: 2.5rem;
+    border-radius: 2rem;
+    border: 1px solid rgba(map-get($colors, 'surface'), 0.1);
+    transition: all $transition-base;
+    
+    &:focus {
+      width: 350px;
+      box-shadow: map-get($shadows, 'glow');
+    }
+  }
+  
+  .search-btn {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: map-get($colors, 'gray');
+  }
+}
+
+// Custom Snackbar Styles
+.custom-snackbar {
+  position: fixed !important;
+  top: calc($header-height + 24px) !important;  // Add header height to top position
+  left: 24px !important;
+  right: unset !important;
+  bottom: unset !important;
+  z-index: 1000 !important;  // Ensure it's above header
+  animation: slideIn 0.3s ease-out;
+  
+  .mat-mdc-snack-bar-container {
+    padding: 0 !important;
+    background: white !important;
+
+    .mdc-snackbar__surface {
+      background-color: white !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+      padding: 16px 20px !important;
+    }
+
+    .mdc-snackbar__label {
+      padding: 0 !important;
+      color: #000000 !important;
+      font-weight: 500 !important;
+      font-family: 'Poppins', sans-serif !important;
+    }
+
+    .mdc-snackbar__actions {
+      padding: 0 !important;
+      margin-right: -8px !important;
+    }
+
+    .mat-mdc-button {
+      min-width: 32px !important;
+      width: 32px !important;
+      padding: 4px !important;
+      margin: 0 !important;
+      color: #666666 !important;
+      background: transparent !important;
+
+      // Completely disable all hover/active states and ripples
+      &::before,
+      &::after,
+      .mat-ripple-element,
+      .mdc-button__ripple {
+        display: none !important;
+        background: none !important;
+      }
+
+      // Override Material states
+      &:hover,
+      &:active,
+      &:focus {
+        background: none !important;
+        box-shadow: none !important;
+      }
+
+      &:hover {
+        color: #000000 !important;
+      }
+
+      .mdc-button__label {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+      }
+    }
+
+    // Override Material's button states at container level
+    .mdc-snackbar__actions {
+      button.mdc-button {
+        &::before,
+        &::after {
+          content: none !important;
+        }
+      }
+    }
+  }
+
+  // Override any Material Design background colors
+  .mdc-snackbar__surface {
+    background-color: white !important;
+  }
+
+  &.hide {
+    animation: slideOut 0.3s ease-out forwards;
+  }
+}
+
+// Emergency Snackbar Style
+.emergency-snackbar {
+  @extend .custom-snackbar;
+  
+  .mat-mdc-snack-bar-container {
+    border-left: 4px solid #dc2626 !important;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(calc(-100% - $header-height));
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(calc(-100% - $header-height));
+    opacity: 0;
+  }
+}

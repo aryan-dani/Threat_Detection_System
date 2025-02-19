@@ -1,0 +1,29 @@
+<div 
+  class="upload-panel"
+  [class.dragging]="isDragging"
+  (dragover)="handleDragOver($event)"
+  (dragleave)="handleDragLeave()"
+  (drop)="handleDrop($event)"
+>
+  <div class="upload-panel__content">
+    <span class="material-icons upload-panel__icon">cloud_upload</span>
+    <h3 class="upload-panel__title">Upload Files for Analysis</h3>
+    <p class="upload-panel__description">
+      Drag and drop image or video files here, or click to select files
+    </p>
+    <input
+      type="file"
+      class="hidden"
+      id="file-upload"
+      accept="image/*,video/*"
+      multiple
+      (change)="handleFileSelect($event)"
+    />
+    <label
+      for="file-upload"
+      class="upload-panel__button"
+    >
+      Select Files
+    </label>
+  </div>
+</div>

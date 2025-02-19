@@ -1,0 +1,213 @@
+@import '../varibales';
+@import '../mixins';
+
+.detection-log {
+    background: linear-gradient(to bottom right, 
+        rgba(255, 255, 255, 0.9), 
+        rgba(255, 255, 255, 0.8)
+    );
+    backdrop-filter: blur(10px);
+    box-shadow: map-get($shadows, 'lg');
+    border-radius: $card-radius;
+    padding: 1.25rem; // Reduced padding
+    height: 100%;
+    max-height: calc(100vh - $header-height - 4rem);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem; // Reduced margin
+    }
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: map-get($colors, 'surface');
+    }
+
+    &__filter-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(map-get($colors, 'surface'), 0.1);
+        transition: all $transition-base;
+        background: linear-gradient(
+            135deg,
+            rgba(map-get($colors, 'surface'), 0.1),
+            rgba(map-get($colors, 'surface'), 0.05)
+        );
+        box-shadow: map-get($shadows, 'sm');
+        backdrop-filter: blur(4px);
+
+        .material-icons {
+            font-size: 20px;
+            color: map-get($colors, 'surface');
+        }
+
+        &:hover {
+            background: linear-gradient(
+                135deg,
+                rgba(map-get($colors, 'surface'), 0.15),
+                rgba(map-get($colors, 'surface'), 0.1)
+            );
+            transform: translateY(-1px);
+        }
+    }
+
+    &__list {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 0.75rem;
+        margin-right: -0.75rem;
+        max-height: calc(100% - 4rem);
+
+        &::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: rgba(map-get($colors, 'surface'), 0.05);
+            border-radius: 2px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(map-get($colors, 'surface'), 0.2);
+            border-radius: 3px;
+
+            &:hover {
+                background: rgba(map-get($colors, 'surface'), 0.3);
+            }
+        }
+    }
+
+    &__filters {
+        background: rgba(map-get($colors, 'surface'), 0.02);
+        padding: 0.75rem;
+        border-radius: $card-radius;
+        margin-bottom: 0.75rem;
+    }
+}
+
+.filter-group {
+    margin-bottom: 1rem;
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: map-get($colors, 'surface');
+    }
+
+    input[type="range"],
+    select {
+        width: 100%;
+    }
+}
+
+.detection-item {
+    border: 1px solid rgba(map-get($colors, 'surface'), 0.08);
+    border-radius: $card-radius;
+    margin-bottom: 0.5rem; // Reduced margin
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateX(4px);
+        border-color: rgba(map-get($colors, 'primary'), 0.2);
+    }
+
+    &__header {
+        padding: 0.75rem; // Reduced padding
+        cursor: pointer;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        transition: background $transition-base;
+
+        &:hover {
+            background: rgba(map-get($colors, 'surface'), 0.02);
+        }
+    }
+
+    &__icon {
+        color: map-get($colors, 'gray');
+    }
+
+    &__info {
+        flex: 1;
+    }
+
+    &__title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 500;
+        color: map-get($colors, 'surface');
+        margin-bottom: 0.5rem;
+    }
+
+    &__details {
+        font-size: 0.875rem;
+        color: map-get($colors, 'gray');
+
+        p {
+            margin: 0.25rem 0;
+        }
+    }
+
+    &__image {
+        padding: 0.75rem; // Reduced padding
+        border-top: 1px solid rgba(map-get($colors, 'surface'), 0.1);
+        background: rgba(map-get($colors, 'surface'), 0.02);
+
+        img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: calc($card-radius * 0.5);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform $transition-base;
+
+            &:hover {
+                transform: scale(1.02);
+                cursor: pointer;
+            }
+        }
+
+        &__no-image {
+            text-align: center;
+            padding: 2rem;
+            color: map-get($colors, 'gray');
+            font-size: 0.875rem;
+            background: rgba(map-get($colors, 'surface'), 0.02);
+            border-radius: calc($card-radius * 0.5);
+        }
+    }
+
+    &.high-risk {
+        border-left: 4px solid #ef4444;
+        animation: highlight 2s infinite;
+    }
+
+    &.medium-risk {
+        border-left: 4px solid #f59e0b;
+    }
+
+    &.low-risk {
+        border-left: 4px solid #10b981;
+    }
+}
+
+@keyframes highlight {
+    0% { background-color: rgba(239, 68, 68, 0); }
+    50% { background-color: rgba(239, 68, 68, 0.1); }
+    100% { background-color: rgba(239, 68, 68, 0); }
+}
