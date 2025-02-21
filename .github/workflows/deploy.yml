@@ -20,15 +20,15 @@ jobs:
       - name: Install Angular CLI
         run: npm install -g @angular/cli
       - name: Install dependencies
-        run: npm install
+        run: npm install  
       - name: Build Angular
-        run: ng build --prod --base-href "/Threat_Detection_System/"
+        run: ng build --configuration production --base-href "/Threat_Detection_System/"
       - name: Add .nojekyll
-        run: touch dist/app/.nojekyll  # Adjust if outputPath is different
+        run: touch dist/app/.nojekyll
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/app  # Adjust if outputPath is different
+          path: dist/app
 
   deploy:
     needs: build
