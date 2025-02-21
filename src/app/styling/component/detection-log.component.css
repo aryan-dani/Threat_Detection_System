@@ -1,0 +1,180 @@
+.detection-log {
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  box-shadow: "0 10px 15px rgba(0, 0, 0, 0.08)";
+  border-radius: 1rem;
+  padding: 1.25rem;
+  height: 100%;
+  max-height: calc(100vh - 4rem - 4rem);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.detection-log__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.detection-log__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #292929;
+}
+.detection-log__filter-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(41, 41, 41, 0.1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, rgba(41, 41, 41, 0.1), rgba(41, 41, 41, 0.05));
+  box-shadow: "0 1px 2px rgba(0, 0, 0, 0.05)";
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+}
+.detection-log__filter-btn .material-icons {
+  font-size: 20px;
+  color: #292929;
+}
+.detection-log__filter-btn:hover {
+  background: linear-gradient(135deg, rgba(41, 41, 41, 0.15), rgba(41, 41, 41, 0.1));
+  transform: translateY(-1px);
+}
+.detection-log__list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.75rem;
+  margin-right: -0.75rem;
+  max-height: calc(100% - 4rem);
+}
+.detection-log__list::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.detection-log__list::-webkit-scrollbar-track {
+  background: rgba(41, 41, 41, 0.05);
+  border-radius: 2px;
+}
+.detection-log__list::-webkit-scrollbar-thumb {
+  background: rgba(41, 41, 41, 0.2);
+  border-radius: 3px;
+}
+.detection-log__list::-webkit-scrollbar-thumb:hover {
+  background: rgba(41, 41, 41, 0.3);
+}
+.detection-log__filters {
+  background: rgba(41, 41, 41, 0.02);
+  padding: 0.75rem;
+  border-radius: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.filter-group {
+  margin-bottom: 1rem;
+}
+.filter-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #292929;
+}
+.filter-group input[type=range],
+.filter-group select {
+  width: 100%;
+}
+
+.detection-item {
+  border: 1px solid rgba(41, 41, 41, 0.08);
+  border-radius: 1rem;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.detection-item:hover {
+  transform: translateX(4px);
+  border-color: rgba(64, 64, 64, 0.2);
+}
+.detection-item__header {
+  padding: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.detection-item__header:hover {
+  background: rgba(41, 41, 41, 0.02);
+}
+.detection-item__icon {
+  color: #999999;
+}
+.detection-item__info {
+  flex: 1;
+}
+.detection-item__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  color: #292929;
+  margin-bottom: 0.5rem;
+}
+.detection-item__details {
+  font-size: 0.875rem;
+  color: #999999;
+}
+.detection-item__details p {
+  margin: 0.25rem 0;
+}
+.detection-item__image {
+  padding: 0.75rem;
+  border-top: 1px solid rgba(41, 41, 41, 0.1);
+  background: rgba(41, 41, 41, 0.02);
+}
+.detection-item__image img {
+  width: 100%;
+  height: 200px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.detection-item__image img:hover {
+  transform: scale(1.02);
+  cursor: pointer;
+}
+.detection-item__image__no-image {
+  text-align: center;
+  padding: 2rem;
+  color: #999999;
+  font-size: 0.875rem;
+  background: rgba(41, 41, 41, 0.02);
+  border-radius: 0.5rem;
+}
+.detection-item.high-risk {
+  border-left: 4px solid #ef4444;
+  animation: highlight 2s infinite;
+}
+.detection-item.medium-risk {
+  border-left: 4px solid #f59e0b;
+}
+.detection-item.low-risk {
+  border-left: 4px solid #10b981;
+}
+
+@keyframes highlight {
+  0% {
+    background-color: rgba(239, 68, 68, 0);
+  }
+  50% {
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+  100% {
+    background-color: rgba(239, 68, 68, 0);
+  }
+}

@@ -1,0 +1,73 @@
+<div class="reports-container reports-page">
+  <!-- Generated Reports Section -->
+  <div class="reports-section">
+    <div class="reports-header">
+      <h2 class="section-title">Generated Reports</h2>
+      <button class="generate-btn" (click)="generateNewReport()">
+        <span class="material-icons">add_circle</span>
+        Generate New Report
+      </button>
+    </div>
+
+    <div class="reports-list">
+      <div *ngFor="let report of reports" class="report-item">
+        <div class="report-info">
+          <h3 class="report-title">{{report.title}}</h3>
+          <p class="report-date">Generated on {{report.date | date:'medium'}}</p>
+        </div>
+        <button class="download-btn" (click)="downloadReport(report)">
+          <span class="material-icons">download</span>
+        </button>
+      </div>
+      
+      <div *ngIf="reports.length === 0" class="reports-empty">
+        <span class="material-icons">description</span>
+        <p>No reports generated yet</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scheduled Reports Section -->
+  <div class="reports-section">
+    <div class="reports-header">
+      <h2 class="section-title">Scheduled Reports</h2>
+      <div class="header-actions">
+        <button class="schedule-btn">
+          <span class="material-icons">schedule</span>
+          New Schedule
+        </button>
+        <button class="filter-btn">
+          <span class="material-icons">filter_list</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="reports-list">
+      <div *ngFor="let report of scheduledReports" class="report-item">
+        <div class="report-info">
+          <h3 class="report-title">{{report.title}}</h3>
+          <p class="report-schedule">
+            <span class="frequency">{{report.frequency}}</span>
+            <span class="separator">•</span>
+            <span class="next-run">Next run: {{report.nextRun | date:'medium'}}</span>
+          </p>
+        </div>
+        <div class="report-actions">
+          <button class="action-btn edit" (click)="editScheduledReport(report)">
+            <span class="material-icons">edit</span>
+            Edit
+          </button>
+          <button class="action-btn disable" (click)="disableScheduledReport(report)">
+            <span class="material-icons">pause</span>
+            Disable
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="scheduledReports.length === 0" class="reports-empty">
+        <span class="material-icons">schedule</span>
+        <p>No scheduled reports</p>
+      </div>
+    </div>
+  </div>
+</div>

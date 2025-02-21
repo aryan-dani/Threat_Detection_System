@@ -1,18 +1,83 @@
-# This .gitignore is appropriate for repositories deployed to GitHub Pages and using
-# a Gemfile as specified at https://github.com/github/pages-gem#conventional
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# Basic Jekyll gitignores (synchronize to Jekyll.gitignore)
-_site/
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+*.js.map
+
+# Dependencies
+/node_modules
+package-lock.json
+yarn.lock
+
+# Angular specific
+/.angular
 .sass-cache/
-.jekyll-cache/
-.jekyll-metadata
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
 
-# Additional Ruby/bundler ignore for when you run: bundle install
-/vendor
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
 
-# Specific ignore for GitHub Pages
-# GitHub Pages will always use its own deployed version of pages-gem 
-# This means GitHub Pages will NOT use your Gemfile.lock and therefore it is
-# counterproductive to check this file into the repository.
-# Details at https://github.com/github/pages-gem/issues/768
-Gemfile.lock
+# Misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+*.log
+
+# System Files
+.DS_Store
+Thumbs.db
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Git Pages specific
+/_site
+/.jekyll-cache
+/.jekyll-metadata
+/docs/_site
+
+# Build artifacts
+*.tsbuildinfo
+.tscache
+*.map
+
+# Tests
+/coverage
+/.nyc_output
+/cypress/videos/
+/cypress/screenshots/
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# Custom files & directories
+/src/assets/uploads
+/src/environments/*.js
+/src/environments/*.js.map

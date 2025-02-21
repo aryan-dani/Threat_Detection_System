@@ -1,0 +1,29 @@
+$themes: (
+  light: (
+    'background': #f8fafc,
+    'surface': #1e293b,
+    'primary': #4f46e5,
+    'text': #1e293b,
+    'text-secondary': #64748b,
+  ),
+  dark: (
+    'background': #0f172a,
+    'surface': #1e293b,
+    'primary': #818cf8,
+    'text': #f1f5f9,
+    'text-secondary': #94a3b8,
+  )
+);
+
+@mixin themed() {
+  @each $theme, $map in $themes {
+    .theme--#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $value in $map {
+        $theme-map: map-merge($theme-map, ($key: $value)) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
