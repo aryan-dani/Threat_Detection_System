@@ -55,5 +55,3 @@ Thumbs.db
 /.nyc_output
 /cypress/videos/
 /cypress/screenshots/
-
-*.scss
