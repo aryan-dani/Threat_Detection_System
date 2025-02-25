@@ -22,6 +22,10 @@ export const routes: Routes = [
     path: 'settings',
     loadComponent: () => import('./header/settings/settings.component').then(m => m.SettingsComponent)
   },
+  {
+    path: 'system-status',
+    loadComponent: () => import('./system-status/system-status.component').then(m => m.SystemStatusComponent)
+  },
   { 
     path: '**', 
     redirectTo: '/dashboard' 

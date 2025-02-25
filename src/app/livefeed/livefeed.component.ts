@@ -25,25 +25,25 @@ export class LivefeedComponent implements OnInit {
       id: 1,
       name: 'Terminal 1 Security',
       status: 'Inactive',
-      imageUrl: '/assets/camera1.jpg'
+      imageUrl: 'assets\\camera1.jpg'
     },
     {
       id: 2,
       name: 'Terminal 2 Security',
       status: 'Active',
-      imageUrl: '/assets/camera2.jpeg'
+      imageUrl: 'assets\\camera2.jpeg'
     },
     {
       id: 3,
       name: 'Main Entrance',
       status: 'Active',
-      imageUrl: '/assets/premium_photo-1661963237186-6ad19c923d24.avif'
+      imageUrl: 'assets\\premium_photo-1661963237186-6ad19c923d24.avif'
     },
     {
       id: 4,
       name: 'Parking Area',
       status: 'Active',
-      imageUrl: '/assets/premium_photo-1661963237186-6ad19c923d24.avif'
+      imageUrl: 'assets\\premium_photo-1661963237186-6ad19c923d24.avif'
     }
   ];
 

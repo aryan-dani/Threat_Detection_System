@@ -1,0 +1,121 @@
+<div class="system-status-page">
+  <!-- Loading State with Error Handling -->
+  <div class="loading-state" *ngIf="!systemHealth && !isError">
+    <div class="loader">
+      <span class="material-icons">sync</span>
+    </div>
+    <p>Loading system metrics...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-state" *ngIf="isError">
+    <div class="error-icon">
+      <span class="material-icons">error_outline</span>
+    </div>
+    <h2>Connection Error</h2>
+    <p>{{errorMessage}}</p>
+    <button class="retry-button" (click)="refreshStatus()">
+      <span class="material-icons">refresh</span>
+      Retry Connection
+    </button>
+  </div>
+
+  <div class="status-overview" *ngIf="systemHealth && !isError">
+    <div class="status-header">
+      <div class="status-indicator">
+        <div class="status-dot" [class.active]="systemHealth.online"></div>
+        <h1>System Status <span class="status-badge" [ngClass]="getOverallHealthStatus()">{{getOverallHealthStatus()}}</span></h1>
+      </div>
+      <button (click)="refreshStatus()" class="refresh-button">
+        <span class="material-icons">refresh</span>
+      </button>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card" *ngFor="let metric of systemMetrics" [ngClass]="metric.status">
+        <span class="material-icons">{{metric.icon}}</span>
+        <div class="metric-info">
+          <h3>{{metric.label}}</h3>
+          <div class="metric-value" [ngClass]="metric.status">
+            {{metric.value}}
+            <span class="trend-indicator" *ngIf="metric.trend">
+              <span class="material-icons" [ngClass]="metric.trend">
+                {{metric.trend === 'up' ? 'trending_up' : 'trending_down'}}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="activity-log" *ngIf="systemHealth && !isError">
+    <div class="activity-header">
+      <div class="header-title">
+        <h2><span class="material-icons">event_note</span>Activity Log</h2>
+        <span class="entry-count">{{filteredActivityLog.length}} entries</span>
+      </div>
+      <div class="severity-tabs">
+        <button 
+          *ngFor="let severity of severityOptions"
+          [class.active]="selectedSeverity === severity"
+          (click)="selectedSeverity = severity"
+          class="tab-button"
+          [ngClass]="severity">
+          <span class="material-icons">{{getSeverityIcon(severity)}}</span>
+          {{severity | titlecase}}
+          <span class="badge" *ngIf="severity !== 'all'">
+            {{getLogCountBySeverity(severity)}}
+          </span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="log-entries">
+      <ng-container *ngIf="filteredActivityLog.length > 0; else emptyLog">
+        <div *ngFor="let entry of filteredActivityLog" 
+             class="log-entry"
+             [ngClass]="[entry.type, entry.severity]"
+             [@fadeInOut]>
+          <div class="entry-icon">
+            <span class="material-icons">{{getActivityIcon(entry.type)}}</span>
+          </div>
+          <div class="entry-content">
+            <div class="entry-header">
+              <p class="entry-message">{{entry.message}}</p>
+              <span class="severity-badge" [ngClass]="entry.severity">
+                {{entry.severity}}
+              </span>
+            </div>
+            <div class="entry-footer">
+              <span class="entry-time">
+                <span class="material-icons">schedule</span>
+                {{entry.timestamp | date:'medium'}}
+              </span>
+              <span class="entry-source" *ngIf="entry.source">
+                <span class="material-icons">dns</span>
+                {{entry.source}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      
+      <ng-template #emptyLog>
+        <div class="empty-state">
+          <span class="material-icons">info</span>
+          <p>No {{selectedSeverity !== 'all' ? selectedSeverity : ''}} events recorded</p>
+          <button class="refresh-button" (click)="refreshLogs()">
+            <span class="material-icons">refresh</span>
+            Refresh Logs
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="last-updated" *ngIf="systemHealth?.lastChecked && !isError">
+    <span class="material-icons">update</span>
+    Last health check: {{systemHealth?.lastChecked | date:'medium'}}
+  </div>
+</div>

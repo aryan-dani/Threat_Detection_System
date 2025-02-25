@@ -14,18 +14,14 @@ interface VideoFeed {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, LivefeedComponent, DetectionLogComponent, UploadFileComponent],
+  imports: [
+    CommonModule, 
+    LivefeedComponent, 
+    DetectionLogComponent, 
+    UploadFileComponent
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['../../styling/component/dashboard.component.scss']
 })
 export class DashboardComponent {
-  mockFeeds: VideoFeed[] = [
-    {
-      id: '1',
-      name: 'Terminal 1 Security',
-      status: 'active',
-      url: 'assets/images/feed1.jpg'
-    },
-    // ... more feeds
-  ];
 }
