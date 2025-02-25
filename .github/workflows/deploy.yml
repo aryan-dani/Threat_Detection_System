@@ -2,7 +2,7 @@ name: Deploy Angular to GitHub Pages
 
 on:
   push:
-    branches: [ Demo ]
+    branches: [ GitHub-Pages ]
 
 permissions:
   pages: write
