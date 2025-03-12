@@ -2,6 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .stats-grid {
@@ -44,6 +47,8 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .charts-grid {
@@ -61,6 +66,7 @@
           backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 100%;
 }
 .chart-card:hover {
   transform: translateY(-2px);
@@ -76,17 +82,28 @@
   position: relative;
   height: 200px;
   width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
 
 .trend-chart {
   margin-bottom: 1rem;
   width: 100%;
+  max-width: 100%;
 }
 .trend-chart .chart-card__content {
   height: 250px;
   width: 100%;
   padding: 0.5rem;
+  overflow: hidden;
 }
 .trend-chart canvas {
   width: 100% !important;
+  max-width: 100%;
+  height: auto !important;
+}
+
+canvas {
+  max-width: 100% !important;
 }

@@ -2,6 +2,8 @@
 @import '../mixins';
 
 .detection-log {
+    position: sticky;
+    top: calc($header-height + 1rem); // Adjusted to account for header height
     background: linear-gradient(to bottom right, 
         rgba(255, 255, 255, 0.9), 
         rgba(255, 255, 255, 0.8)
@@ -10,11 +12,13 @@
     box-shadow: map-get($shadows, 'lg');
     border-radius: $card-radius;
     padding: 1.25rem; // Reduced padding
-    height: 100%;
-    max-height: calc(100vh - $header-height - 4rem);
+    height: auto; // Changed from 100% to auto
+    max-height: calc(100vh - $header-height - 2rem);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    z-index: 10; // Added z-index to ensure it stays above other content
+    transition: transform 0.2s ease; // Added smooth transition
 
     &__header {
         display: flex;
@@ -66,7 +70,7 @@
         overflow-y: auto;
         padding-right: 0.75rem;
         margin-right: -0.75rem;
-        max-height: calc(100% - 4rem);
+        max-height: calc(100vh - $header-height - 6rem); // Better height calculation
 
         &::-webkit-scrollbar {
             width: 6px;

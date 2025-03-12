@@ -13,7 +13,7 @@ export class DataService {
       confidence: 0.98,
       type: 'weapon',
       location: 'Terminal 1',
-      imageUrl: './../../assets/detection1.jpg'
+      imageUrl: 'assets\\detection1.jpg'
     },
     {
       id: '2',
@@ -21,40 +21,20 @@ export class DataService {
       confidence: 0.89,
       type: 'weapon',
       location: 'Terminal 2',
-      imageUrl: './../../assets/detection2.jpg'
-    }
-  ]);
-
-  private videoFeeds = new BehaviorSubject<VideoFeed[]>([
-    {
-      id: '1',
-      name: 'Terminal 1 Security',
-      status: 'active',
-      url: './../../assets/cam1.jpg',
-      poster: './../../assets/cam1-poster.jpg'
-    },
-    {
-      id: '2',
-      name: 'Terminal 2 Security',
-      status: 'active',
-      url: './../../assets/cam2.jpg',
-      poster: './../../assets/cam2-poster.jpg'
+      imageUrl: 'assets\\detection2.jpg'
     },
     {
       id: '3',
-      name: 'Main Entrance',
-      status: 'active',
-      url: './../../assets/cam3.jpg',
-      poster: './../../assets/cam3-poster.jpg'
-    }
+      timestamp: new Date(Date.now() - 300000),
+      confidence: 0.89,
+      type: 'weapon',
+      location: 'Terminal 3',
+      imageUrl: 'assets\\detection2.jpg'
+    },
   ]);
 
   getDetections() {
     return this.detections.asObservable();
-  }
-
-  getVideoFeeds() {
-    return this.videoFeeds.asObservable();
   }
 
   addDetection(detection: Detection) {

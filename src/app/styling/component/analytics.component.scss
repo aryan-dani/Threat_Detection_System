@@ -5,6 +5,9 @@
   display: flex;
   flex-direction: column;
   gap: $grid-gap;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; // Prevent horizontal overflow
 }
 
 .stats-grid {
@@ -52,6 +55,8 @@
   display: flex;
   flex-direction: column;
   gap: $grid-gap;
+  width: 100%;
+  overflow-x: hidden; // Prevent horizontal overflow
 }
 
 .charts-grid {
@@ -72,6 +77,7 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all $transition-base;
+  max-width: 100%; // Ensure chart card never exceeds parent width
 
   &:hover {
     transform: translateY(-2px);
@@ -89,20 +95,32 @@
     position: relative;
     height: 200px; // Reduced from 250px
     width: 100%;
+    overflow: hidden; // Add overflow hidden to prevent scrolling
+    display: flex;
+    justify-content: center;
   }
 }
 
 .trend-chart {
   margin-bottom: 1rem;
   width: 100%;
+  max-width: 100%; // Ensure trend chart never exceeds parent width
   
   .chart-card__content {
     height: 250px; // Reduced from 300px
     width: 100%;
     padding: 0.5rem;
+    overflow: hidden; // Add overflow hidden
   }
 
   canvas {
     width: 100% !important;
+    max-width: 100%; // Ensure canvas never exceeds container width
+    height: auto !important; // Maintain aspect ratio
   }
+}
+
+// Add this to ensure all chart canvases behave responsively
+canvas {
+  max-width: 100% !important;
 }

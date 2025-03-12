@@ -21,11 +21,13 @@
     <div class="chart-card trend-chart">
       <h2 class="chart-card__title">Detection Trends</h2>
       <div class="chart-card__content">
-        <canvas baseChart
-          [data]="lineChartData"
-          [options]="commonOptions"
-          type="line">
-        </canvas>
+        <div style="width: 100%; position: relative;">
+          <canvas baseChart
+            [data]="lineChartData"
+            [options]="commonOptions"
+            type="line">
+          </canvas>
+        </div>
       </div>
     </div>
 
@@ -34,21 +36,25 @@
       <div class="chart-card">
         <h2 class="chart-card__title">Detection by Location</h2>
         <div class="chart-card__content">
-          <canvas baseChart
-            [data]="pieChartData"
-            [options]="pieChartOptions"
-            type="pie">
-          </canvas>
+          <div style="width: 100%; position: relative;">
+            <canvas baseChart
+              [data]="pieChartData"
+              [options]="pieChartOptions"
+              type="pie">
+            </canvas>
+          </div>
         </div>
       </div>
       <div class="chart-card">
         <h2 class="chart-card__title">Hourly Distribution</h2>
         <div class="chart-card__content">
-          <canvas baseChart
-            [data]="barChartData"
-            [options]="commonOptions"
-            type="bar">
-          </canvas>
+          <div style="width: 100%; position: relative;">
+            <canvas baseChart
+              [data]="barChartData"
+              [options]="commonOptions"
+              type="bar">
+            </canvas>
+          </div>
         </div>
       </div>
     </div>

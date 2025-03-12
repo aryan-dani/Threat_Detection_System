@@ -1,15 +1,19 @@
 .detection-log {
+  position: sticky;
+  top: 5rem;
   background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
   box-shadow: "0 10px 15px rgba(0, 0, 0, 0.08)";
   border-radius: 1rem;
   padding: 1.25rem;
-  height: 100%;
-  max-height: calc(100vh - 4rem - 4rem);
+  height: auto;
+  max-height: calc(100vh - 4rem - 2rem);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: 10;
+  transition: transform 0.2s ease;
 }
 .detection-log__header {
   display: flex;
@@ -49,7 +53,7 @@
   overflow-y: auto;
   padding-right: 0.75rem;
   margin-right: -0.75rem;
-  max-height: calc(100% - 4rem);
+  max-height: calc(100vh - 4rem - 6rem);
 }
 .detection-log__list::-webkit-scrollbar {
   width: 6px;

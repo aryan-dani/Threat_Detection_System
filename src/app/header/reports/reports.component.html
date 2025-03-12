@@ -3,8 +3,8 @@
   <div class="reports-section">
     <div class="reports-header">
       <h2 class="section-title">Generated Reports</h2>
-      <button class="generate-btn" (click)="generateNewReport()">
-        <span class="material-icons">add_circle</span>
+      <button mat-raised-button color="primary" class="generate-btn" (click)="generateNewReport()">
+        <mat-icon>add_circle</mat-icon>
         Generate New Report
       </button>
     </div>
@@ -15,13 +15,13 @@
           <h3 class="report-title">{{report.title}}</h3>
           <p class="report-date">Generated on {{report.date | date:'medium'}}</p>
         </div>
-        <button class="download-btn" (click)="downloadReport(report)">
-          <span class="material-icons">download</span>
+        <button mat-icon-button color="primary" (click)="downloadReport(report)" aria-label="Download report">
+          <mat-icon>download</mat-icon>
         </button>
       </div>
       
       <div *ngIf="reports.length === 0" class="reports-empty">
-        <span class="material-icons">description</span>
+        <mat-icon>description</mat-icon>
         <p>No reports generated yet</p>
       </div>
     </div>
@@ -32,12 +32,12 @@
     <div class="reports-header">
       <h2 class="section-title">Scheduled Reports</h2>
       <div class="header-actions">
-        <button class="schedule-btn">
-          <span class="material-icons">schedule</span>
+        <button mat-raised-button color="primary">
+          <mat-icon>schedule</mat-icon>
           New Schedule
         </button>
-        <button class="filter-btn">
-          <span class="material-icons">filter_list</span>
+        <button mat-icon-button aria-label="Filter list">
+          <mat-icon>filter_list</mat-icon>
         </button>
       </div>
     </div>
@@ -53,19 +53,19 @@
           </p>
         </div>
         <div class="report-actions">
-          <button class="action-btn edit" (click)="editScheduledReport(report)">
-            <span class="material-icons">edit</span>
+          <button mat-stroked-button color="primary" (click)="editScheduledReport(report)">
+            <mat-icon>edit</mat-icon>
             Edit
           </button>
-          <button class="action-btn disable" (click)="disableScheduledReport(report)">
-            <span class="material-icons">pause</span>
+          <button mat-stroked-button color="warn" (click)="disableScheduledReport(report)">
+            <mat-icon>pause</mat-icon>
             Disable
           </button>
         </div>
       </div>
 
       <div *ngIf="scheduledReports.length === 0" class="reports-empty">
-        <span class="material-icons">schedule</span>
+        <mat-icon>schedule</mat-icon>
         <p>No scheduled reports</p>
       </div>
     </div>

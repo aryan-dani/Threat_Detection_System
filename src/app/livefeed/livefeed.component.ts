@@ -20,6 +20,7 @@ interface Feed {
 })
 export class LivefeedComponent implements OnInit {
   allCamerasActive = true;
+  emergencyClickCount = 0;
   feeds: Feed[] = [
     {
       id: 1,
@@ -80,7 +81,30 @@ export class LivefeedComponent implements OnInit {
   }
 
   triggerEmergencyMode() {
-    this.showSnackbar('Emergency mode activated!', true);
+    this.emergencyClickCount++;
+    
+    if (this.emergencyClickCount === 7) {
+      this.showSecretImage();
+      this.emergencyClickCount = 0; // Reset count
+    } else {
+      this.showSnackbar('Emergency mode activated!', true);
+    }
+  }
+  
+  showSecretImage() {
+    // Use the existing modal to display a secret image
+    const modal = document.querySelector('.modal') as HTMLElement;
+    const modalImage = modal?.querySelector('img') as HTMLImageElement;
+    
+    if (modalImage) {
+      // Set image source to your secret image URL
+      modalImage.src = "https://bit.ly/3DB2im5";
+      modalImage.alt = "Secret Image";
+      modal?.classList.add('active');
+    }
+    
+    // Optional: Show a snackbar notification
+    this.showSnackbar('Secret image revealed!', true);
   }
 
   downloadLatestFootage() {

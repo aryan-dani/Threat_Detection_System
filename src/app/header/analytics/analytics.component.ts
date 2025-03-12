@@ -133,7 +133,11 @@ export class AnalyticsComponent implements OnInit {
           padding: 8,
           font: {
             size: 10
-          }
+          },
+          maxRotation: 45, // Add rotation to x-axis labels to save horizontal space
+          minRotation: 45,  // Add rotation to x-axis labels
+          autoSkip: true,   // Automatically skip labels if they overlap
+          maxTicksLimit: 12 // Limit the number of ticks to avoid overcrowding
         }
       },
       y: {
@@ -157,7 +161,8 @@ export class AnalyticsComponent implements OnInit {
         top: 5,
         bottom: 5
       }
-    }
+    },
+    resizeDelay: 100 // Add small delay for better resize handling
   };
 
   stats: StatCard[] = [
