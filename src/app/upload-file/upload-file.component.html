@@ -1,29 +1,77 @@
-<div 
-  class="upload-panel"
-  [class.dragging]="isDragging"
-  (dragover)="handleDragOver($event)"
-  (dragleave)="handleDragLeave()"
-  (drop)="handleDrop($event)"
->
-  <div class="upload-panel__content">
-    <span class="material-icons upload-panel__icon">cloud_upload</span>
-    <h3 class="upload-panel__title">Upload Files for Analysis</h3>
-    <p class="upload-panel__description">
-      Drag and drop image or video files here, or click to select files
-    </p>
-    <input
-      type="file"
-      class="hidden"
-      id="file-upload"
-      accept="image/*,video/*"
-      multiple
-      (change)="handleFileSelect($event)"
-    />
-    <label
-      for="file-upload"
-      class="upload-panel__button"
-    >
-      Select Files
-    </label>
+<div class="container">
+  <div 
+    class="upload-panel"
+    [class.dragging]="isDragging"
+    (dragover)="handleDragOver($event)"
+    (dragleave)="handleDragLeave()"
+    (drop)="handleDrop($event)"
+  >
+    <div class="upload-panel__content">
+      <span class="material-icons upload-panel__icon">cloud_upload</span>
+      <h3 class="upload-panel__title">Upload Files for Analysis</h3>
+      <p class="upload-panel__description">
+        Drag and drop X-ray images here, or click to select files
+      </p>
+      <input
+        type="file"
+        class="hidden"
+        id="file-upload"
+        accept="image/*"
+        (change)="handleFileSelect($event)"
+      />
+      <label
+        for="file-upload"
+        class="upload-panel__button"
+      >
+        Select Files
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="isProcessing" class="processing-indicator">
+    <div class="spinner"></div>
+    <p>Processing image...</p>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <div class="error-message">
+      <span class="material-icons error-icon">error</span>
+      <p>{{ error }}</p>
+    </div>
+    <button class="retry-button" (click)="error = null">Dismiss</button>
+  </div>
+
+  <div *ngIf="imagePreview && !error" class="results-container">
+    <div class="image-preview">
+      <img [src]="imagePreview" alt="Uploaded image" />
+    </div>
+
+    <div *ngIf="detectionResult" class="detection-results">
+      <h3>Analysis Results</h3>
+      
+      <div class="result-card" [class.threat-detected]="detectionResult.threat_detected">
+        <div class="result-header">
+          <span class="material-icons">
+            {{ detectionResult.threat_detected ? 'warning' : 'check_circle' }}
+          </span>
+          <h4>{{ detectionResult.threat_detected ? 'Threat Detected' : 'No Threat Detected' }}</h4>
+        </div>
+
+        <div class="result-details">
+          <div *ngIf="detectionResult.threat_detected" class="threat-type">
+            <strong>Threat Type:</strong> {{ detectionResult.threat_type }}
+          </div>
+          <div class="confidence">
+            <strong>Confidence:</strong> {{ (detectionResult.confidence * 100).toFixed(1) }}%
+          </div>
+          <div class="timestamp">
+            <strong>Timestamp:</strong> {{ detectionResult.timestamp | date:'medium' }}
+          </div>
+          <div *ngIf="detectionResult.processing_time_ms" class="processing-time">
+            <strong>Processing Time:</strong> {{ detectionResult.processing_time_ms }}ms
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

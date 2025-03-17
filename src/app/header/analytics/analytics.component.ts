@@ -125,23 +125,23 @@ export class AnalyticsComponent implements OnInit {
     },
     scales: {
       x: {
-        display: true, // Only for line and bar charts
+        display: true,
         grid: {
           display: false
         },
         ticks: {
           padding: 8,
           font: {
-            size: 10
+            size: 9
           },
-          maxRotation: 45, // Add rotation to x-axis labels to save horizontal space
-          minRotation: 45,  // Add rotation to x-axis labels
-          autoSkip: true,   // Automatically skip labels if they overlap
-          maxTicksLimit: 12 // Limit the number of ticks to avoid overcrowding
+          maxRotation: 45,
+          minRotation: 45,
+          autoSkip: false,   // Ensure no labels are skipped
+          maxTicksLimit: 13  // Increase to accommodate all 12 labels plus a buffer
         }
       },
       y: {
-        display: true, // Only for line and bar charts
+        display: true,
         beginAtZero: true,
         grid: {
           color: 'rgba(0, 0, 0, 0.05)'
@@ -157,12 +157,12 @@ export class AnalyticsComponent implements OnInit {
     layout: {
       padding: {
         left: 5,
-        right: 5,
+        right: 60, // Increased right padding to ensure December is visible
         top: 5,
         bottom: 5
       }
     },
-    resizeDelay: 100 // Add small delay for better resize handling
+    resizeDelay: 100
   };
 
   stats: StatCard[] = [

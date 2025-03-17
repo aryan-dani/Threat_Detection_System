@@ -1,10 +1,12 @@
 export interface Detection {
-  id: string;
-  timestamp: Date;
-  confidence: number;
-  type: 'weapon';
-  location: string;
+  id?: string;
+  timestamp: string | number;
   imageUrl?: string;
+  threatDetected: boolean;
+  threatType?: string | null;
+  confidence: number;
+  source?: string;
+  location?: string;
 }
 
 export interface VideoFeed {

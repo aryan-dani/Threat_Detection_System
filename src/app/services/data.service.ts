@@ -9,27 +9,30 @@ export class DataService {
   private detections = new BehaviorSubject<Detection[]>([
     {
       id: '1',
-      timestamp: new Date(),
-      confidence: 0.98,
-      type: 'weapon',
+      timestamp: Date.now(),
+      threatDetected: true,
+      threatType: 'gun',
+      confidence: 0.88,
       location: 'Terminal 1',
       imageUrl: 'assets\\detection1.jpg'
     },
     {
       id: '2',
-      timestamp: new Date(Date.now() - 300000),
+      timestamp: Date.now() - 300000,
+      threatDetected: true,
+      threatType: 'knife',
       confidence: 0.89,
-      type: 'weapon',
       location: 'Terminal 2',
-      imageUrl: 'assets\\detection2.jpg'
+      imageUrl: 'assets\\detection4.jpg'
     },
     {
       id: '3',
-      timestamp: new Date(Date.now() - 300000),
-      confidence: 0.89,
-      type: 'weapon',
+      timestamp: Date.now() - 600000,
+      threatDetected: true,
+      threatType: 'gun',
+      confidence: 0.97,
       location: 'Terminal 3',
-      imageUrl: 'assets\\detection2.jpg'
+      imageUrl: 'assets\\detection3.jpg'
     },
   ]);
 

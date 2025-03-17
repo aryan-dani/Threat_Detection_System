@@ -1,6 +1,14 @@
 @import '../varibales';
 @import '../mixins';
 
+// Add general font styling to the top
+.settings-container {
+  font-family: 'Poppins', sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
 .space-y-6 > * + * {
   margin-top: 1.5rem;
 }

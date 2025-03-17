@@ -30,7 +30,9 @@ export class DetectionLogComponent implements OnInit {
     this.isFilterOpen = !this.isFilterOpen;
   }
 
-  toggleExpanded(id: string) {
+  toggleExpanded(id: string | undefined) {
+    if (!id) return; // Skip if id is undefined
+    
     const index = this.expanded.indexOf(id);
     if (index === -1) {
       this.expanded.push(id);
@@ -39,12 +41,19 @@ export class DetectionLogComponent implements OnInit {
     }
   }
 
+  isExpanded(id: string | undefined): boolean {
+    return id ? this.expanded.includes(id) : false;
+  }
+
   get filteredDetections() {
     return this.detections
       .filter(d => d.confidence >= this.confidenceThreshold)
       .sort((a, b) => {
         if (this.sortBy === 'time') {
-          return b.timestamp.getTime() - a.timestamp.getTime();
+          // Handle timestamp as a number directly
+          const aTime = typeof a.timestamp === 'number' ? a.timestamp : Date.parse(String(a.timestamp));
+          const bTime = typeof b.timestamp === 'number' ? b.timestamp : Date.parse(String(b.timestamp));
+          return bTime - aTime;
         }
         return b.confidence - a.confidence;
       });

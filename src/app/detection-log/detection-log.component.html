@@ -33,9 +33,9 @@
         <span class="material-icons detection-item__icon">warning</span>
         <div class="detection-item__info">
           <div class="detection-item__title">
-            <span>Weapon Detected</span>
+            <span>{{ detection.threatType || 'Threat' }} Detected</span>
             <span class="material-icons">
-              {{expanded.includes(detection.id) ? 'expand_less' : 'expand_more'}}
+              {{ isExpanded(detection.id) ? 'expand_less' : 'expand_more' }}
             </span>
           </div>
           <div class="detection-item__details">
@@ -46,7 +46,7 @@
         </div>
       </div>
       
-      <div *ngIf="expanded.includes(detection.id)" class="detection-item__image">
+      <div *ngIf="isExpanded(detection.id)" class="detection-item__image">
         <img *ngIf="detection.imageUrl" [src]="detection.imageUrl" alt="Detection snapshot">
         <p *ngIf="!detection.imageUrl" class="detection-item__no-image">
           No image available for this detection

@@ -8,6 +8,7 @@
     "dev": "nodemon system-monitor.js"
   },
   "dependencies": {
+    "axios": "^1.8.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "ws": "^8.18.0"
