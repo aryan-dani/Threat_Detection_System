@@ -12,11 +12,10 @@ import torch.nn as nn
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from torch.optim.swa_utils import AveragedModel, update_bn
-from torch.amp import autocast
-from torch.amp import GradScaler  # Updated for PyTorch 2.6.0+
+from torch.amp import autocast, GradScaler
 from timm.optim import AdamP
 from timm.scheduler import CosineLRScheduler
-from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score, AUROC, AveragePrecision
+from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score, AUROC, AveragePrecision, ConfusionMatrix, ROC
 from tqdm import tqdm
 
 # Suppress Albumentations update warnings
@@ -90,7 +89,7 @@ def create_stage_loaders(df, stage_config, train_paths, train_labels, val_paths,
     img_size = stage_config['img_size']
     batch_size = stage_config['batch_size']
 
-    train_dataset = AdvancedXRayDataset(train_paths, train_labels, img_size=img_size, is_training=True)  # Step 3: Disable augmentations temporarily
+    train_dataset = AdvancedXRayDataset(train_paths, train_labels, img_size=img_size, is_training=True)
     val_dataset = AdvancedXRayDataset(val_paths, val_labels, img_size=img_size)
 
     class_counts = np.bincount(train_labels.astype(int))
@@ -106,17 +105,31 @@ def create_stage_loaders(df, stage_config, train_paths, train_labels, val_paths,
     }
 
 # -------------------- Model Architecture --------------------
+class SimpleAttention(nn.Module):
+    def __init__(self, in_features):
+        super().__init__()
+        self.attention = nn.Sequential(
+            nn.Linear(in_features, in_features // 16),
+            nn.ReLU(),
+            nn.Linear(in_features // 16, in_features),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        attention_weights = self.attention(x)
+        return x * attention_weights
+
 class WeaponDetector(nn.Module):
     def __init__(self, num_classes=1):
         super().__init__()
         self.base_model = timm.create_model('tf_efficientnetv2_m', pretrained=True, features_only=False)
         in_features = self.base_model.classifier.in_features
         self.base_model.classifier = nn.Identity()
-        
+        self.attention = SimpleAttention(in_features)
         self.head = nn.Sequential(
             nn.Linear(in_features, 512),
             nn.SiLU(),
-            nn.Dropout(0.2),
+            nn.Dropout(0.3),
             nn.Linear(512, num_classes)
         )
         self.to(memory_format=torch.channels_last)
@@ -124,6 +137,7 @@ class WeaponDetector(nn.Module):
     def forward(self, x):
         x = x.contiguous(memory_format=torch.channels_last)
         features = self.base_model(x)
+        features = self.attention(features)
         return self.head(features)
 
 # -------------------- Training Utilities --------------------
@@ -136,12 +150,10 @@ class ProgressiveTrainer:
         self.train_labels = train_labels
         self.val_paths = val_paths
         self.val_labels = val_labels
-        
-        # Training stages with lowered learning rate
         self.stages = [
             {'img_size': 224, 'batch_size': 32, 'epochs': 10, 'lr': 1e-4},
             {'img_size': 300, 'batch_size': 16, 'epochs': 15, 'lr': 1e-4},
-            {'img_size': 384, 'batch_size': 16, 'epochs': 20, 'lr': 5e-5}
+            {'img_size': 384, 'batch_size': 8, 'epochs': 20, 'lr': 5e-5}
         ]
         self.current_stage = 0
         self.global_epoch = 0
@@ -158,26 +170,36 @@ class ProgressiveTrainer:
             return True
         return False
 
+def tta_predict(model, image, device):
+    preds = []
+    with torch.no_grad():
+        with torch.autocast(device_type="cuda"):
+            output = model(image)
+            preds.append(torch.sigmoid(output))
+            flipped = transforms.functional.hflip(image)
+            output = model(flipped)
+            preds.append(torch.sigmoid(output))
+            rotated = transforms.functional.rotate(image, angle=5)
+            output = model(rotated)
+            preds.append(torch.sigmoid(output))
+    return torch.mean(torch.stack(preds), dim=0)
+
 def train_model(csv_path):
     torch.cuda.empty_cache()
 
     df = pd.read_csv(csv_path)
     df = df[df['image_path'].apply(os.path.exists)].sample(frac=1, random_state=42)
     logger.info(f"Loaded dataset with {len(df)} samples")
-    
-    # Validate and log label distribution
-    if df['label'].isnull().any():
-        logger.error("NaN values found in DataFrame labels")
+
+    if df['label'].isnull().any() or not df['label'].isin([0, 1]).all():
+        logger.error("Invalid labels in DataFrame")
         return None
-    if not df['label'].isin([0, 1]).all():
-        logger.error(f"Non-binary labels found in DataFrame: {df['label'].unique()}")
-        return None
-    zeros = len(df[df['label'] == 0])
-    ones = len(df[df['label'] == 1])
+    zeros, ones = len(df[df['label'] == 0]), len(df[df['label'] == 1])
     logger.info(f"Label distribution: 0s={zeros}, 1s={ones}, ratio={zeros/ones:.4f}")
 
-    # Use static pos_weight (original) or dynamic (uncomment)
-    pos_weight = zeros / ones  # Dynamic, matches earlier 0.0927 reciprocal
+    # Device setup
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    pos_weight = torch.tensor([zeros / ones]).to(device)
     logger.info(f"Using pos_weight: {pos_weight:.4f}")
 
     # Split data
@@ -189,177 +211,120 @@ def train_model(csv_path):
         train_val_paths, train_val_labels, test_size=0.1, stratify=train_val_labels, random_state=42
     )
     logger.info(f"Train: {len(train_paths)}, Val: {len(val_paths)}, Test: {len(test_paths)}")
-    logger.info(f"Train label distribution: 0s={len(train_labels[train_labels == 0])}, 1s={len(train_labels[train_labels == 1])}")
 
-    # Device setup
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     logger.info(f"Using device: {device}, CUDA: {torch.version.cuda}, PyTorch: {torch.__version__}")
     torch.backends.cudnn.benchmark = True
 
     # Model setup
     model = WeaponDetector().to(device)
     ema_model = AveragedModel(model).to(device)
-    scaler = GradScaler("cuda")  # Updated for PyTorch 2.6.0+
-    criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([pos_weight]).to(device))
+    scaler = GradScaler("cuda")
+    criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
 
     # Metrics
     metrics = MetricCollection({
-        'accuracy': Accuracy(task='binary'),
-        'f1': F1Score(task='binary'),
-        'auc': AUROC(task='binary'),
-        'prc': AveragePrecision(task='binary')
+        'accuracy': Accuracy(task='binary'), 'f1': F1Score(task='binary'),
+        'auc': AUROC(task='binary'), 'prc': AveragePrecision(task='binary'),
+        'confmat': ConfusionMatrix(task='binary'), 'roc': ROC(task='binary')
     }).to(device)
 
     # Initialize trainer
     trainer = ProgressiveTrainer(model, device, df, train_paths, train_labels, val_paths, val_labels)
 
-    # Test forward pass on first 5 images
-    model.eval()
-    test_dataset = AdvancedXRayDataset(train_paths[:5], train_labels[:5], img_size=224, is_training=False)
-    test_loader = DataLoader(test_dataset, batch_size=1)
-    for i, (test_image, test_label) in enumerate(test_loader):
-        test_image = test_image.to(device)
-        with torch.no_grad():
-            test_output = model(test_image).squeeze()
-            if torch.isnan(test_output).any():
-                logger.error(f"Model produces NaN outputs for image {i} ({train_paths[i]})")
-            else:
-                logger.info(f"Image {i} ({train_paths[i]}): output {test_output.item()}")
-    model.train()
+    # Compile model if supported
+    if hasattr(torch, 'compile'):
+        model = torch.compile(model)
+        ema_model = torch.compile(ema_model)
 
     best_score = 0.0
+    patience = 5
+    no_improve_epochs = 0
+    best_auc = 0.0
 
     optimizer = AdamP(model.parameters(), lr=trainer.stages[0]['lr'], weight_decay=1e-4)
-    scheduler = CosineLRScheduler(optimizer,
-                                  t_initial=trainer.total_epochs,
-                                  warmup_t=5,
-                                  lr_min=1e-6,
-                                  warmup_lr_init=1e-5)
+    scheduler = CosineLRScheduler(optimizer, t_initial=trainer.total_epochs, warmup_t=5, lr_min=1e-6, warmup_lr_init=1e-5)
 
-    # Training loop
+    accumulation_steps = 4  # For gradient accumulation
+
     while True:
         stage_config = trainer.stages[trainer.current_stage]
         loaders = trainer.get_loaders()
         logger.info(f"\n=== Stage {trainer.current_stage + 1}: {stage_config} ===")
-        logger.info(f"Current learning rate: {optimizer.param_groups[0]['lr']:.2e}")
 
         for epoch in range(stage_config['epochs']):
-            # Training phase
             model.train()
             train_loss = []
             pbar = tqdm(loaders['train'], desc=f"Epoch {trainer.global_epoch + 1}")
+            optimizer.zero_grad(set_to_none=True)
+
             for i, (images, labels) in enumerate(pbar):
                 images = images.to(device, non_blocking=True)
                 labels = labels.to(device, non_blocking=True)
 
-                # Step 1: Verify labels
-                if torch.any(torch.isnan(labels)) or torch.any((labels != 0) & (labels != 1)):
-                    logger.error(f"Invalid labels in batch {i}: {labels}")
-                    break
-
-                # Step 2: Inspect batch composition (log paths for Batch 0)
-                if i == 0:
-                    batch_size = stage_config['batch_size']
-                    batch_paths = train_paths[i * batch_size:(i + 1) * batch_size]
-                    logger.info(f"Batch 0 image paths: {batch_paths}")
-
-                # Step 4: Disable mixed precision temporarily
                 with torch.autocast(device_type="cuda"):
                     outputs = model(images).squeeze()
-                    # Step 6: Stabilize loss by clipping outputs
                     outputs = torch.clamp(outputs, min=-10, max=10)
-                    loss = criterion(outputs, labels)
-
-                    # Log outputs and loss for first 5 batches
-                    if i < 5:
-                        logger.info(f"Batch {i}: outputs min={outputs.min().item()}, max={outputs.max().item()}, mean={outputs.mean().item()}")
-                        logger.info(f"Batch {i}: loss={loss.item()}")
-
-                # Check for NaN loss
-                if torch.isnan(loss):
-                    logger.error("NaN loss detected. Stopping training.")
-                    return None
+                    loss = criterion(outputs, labels) / accumulation_steps
 
                 scaler.scale(loss).backward()
-                # Step 5: Check gradient norm and tighten clipping
-                grad_norm_before = 0.0
-                for param in model.parameters():
-                    if param.grad is not None:
-                        grad_norm_before += torch.norm(param.grad).item() ** 2
-                grad_norm_before = grad_norm_before ** 0.5
-                if i < 5:
-                    logger.info(f"Batch {i} gradient norm before clipping: {grad_norm_before:.4f}")
-                
-                grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)  # Increased to 1.0
-                if i < 5:
-                    logger.info(f"Batch {i} gradient norm after clipping: {grad_norm.item():.4f}")
-                    if torch.isnan(grad_norm):
-                        logger.error(f"NaN detected in gradients after clipping for batch {i}")
-                scaler.step(optimizer)
-                scaler.update()
-                optimizer.zero_grad(set_to_none=True)
-                ema_model.update_parameters(model)
+                if (i + 1) % accumulation_steps == 0:
+                    scaler.step(optimizer)
+                    scaler.update()
+                    optimizer.zero_grad(set_to_none=True)
+                    ema_model.update_parameters(model)
 
-                train_loss.append(loss.item())
-                pbar.set_postfix({
-                    'loss': f"{np.mean(train_loss[-10:]):.4f}",
-                    'lr': f"{optimizer.param_groups[0]['lr']:.2e}"
-                })
+                train_loss.append(loss.item() * accumulation_steps)
+                pbar.set_postfix({'loss': f"{np.mean(train_loss[-10:]):.4f}", 'lr': f"{optimizer.param_groups[0]['lr']:.2e}"})
 
-            # Validation phase
+            # Validation
             model.eval()
+            metrics.reset()
             val_loss = []
-            val_metrics = {k: [] for k in metrics.keys()}
             with torch.no_grad():
                 for images, labels in loaders['val']:
                     images = images.to(device, non_blocking=True)
                     labels = labels.to(device, non_blocking=True)
-
                     with torch.autocast(device_type="cuda"):
                         outputs = ema_model(images).squeeze()
                         loss = criterion(outputs, labels)
                         preds = torch.sigmoid(outputs)
                         int_labels = labels.long()
-
                     val_loss.append(loss.item())
-                    batch_metrics = metrics(preds, int_labels)
-                    for k in val_metrics:
-                        val_metrics[k].append(batch_metrics[k].item())
-
-            avg_metrics = {k: np.mean(v) for k, v in val_metrics.items()}
+                    metrics.update(preds, int_labels)
+            computed_metrics = metrics.compute()
+            avg_metrics = {k: computed_metrics[k].item() for k in computed_metrics if k not in ['confmat', 'roc']}
             current_score = avg_metrics['auc'] + avg_metrics['prc']
-            logger.info(f"\nEpoch {trainer.global_epoch + 1} Summary:")
-            logger.info(f"Train Loss: {np.mean(train_loss):.4f}")
-            logger.info(f"Val Loss: {np.mean(val_loss):.4f}")
-            logger.info(f"Val Metrics: {', '.join([f'{k}: {v:.4f}' for k, v in avg_metrics.items()])}")
+            logger.info(f"Epoch {trainer.global_epoch + 1} - Train Loss: {np.mean(train_loss):.4f}, Val Loss: {np.mean(val_loss):.4f}")
+            logger.info(f"Val Metrics: {avg_metrics}")
+            logger.info(f"Confusion Matrix:\n{computed_metrics['confmat']}")
 
-            # Save best model
-            if current_score > best_score:
-                best_score = current_score
-                torch.save({
-                    'model': model.state_dict(),
-                    'ema_model': ema_model.state_dict(),
-                    'stage': trainer.current_stage,
-                    'epoch': trainer.global_epoch,
-                    'metrics': avg_metrics
-                }, 'best_model.pth')
-                logger.info(f"New best model saved with score: {best_score:.4f}")
+            # Early stopping
+            if avg_metrics['auc'] > best_auc:
+                best_auc = avg_metrics['auc']
+                no_improve_epochs = 0
+                if current_score > best_score:
+                    best_score = current_score
+                    torch.save({'model': model.state_dict(), 'ema_model': ema_model.state_dict(),
+                                'stage': trainer.current_stage, 'epoch': trainer.global_epoch, 'metrics': avg_metrics},
+                               'best_model.pth')
+                    logger.info(f"New best model saved with score: {best_score:.4f}")
+            else:
+                no_improve_epochs += 1
+                if no_improve_epochs >= patience:
+                    logger.info(f"Early stopping after {patience} epochs without AUC improvement")
+                    break
 
             scheduler.step(trainer.global_epoch)
             trainer.global_epoch += 1
 
-        # Update BN statistics
-        logger.info("Updating batch normalization statistics...")
         update_bn(loaders['train'], ema_model, device=device)
-
         if not trainer.progress_stage():
-            logger.info("Final training stage completed")
             break
 
-    # Final evaluation on test set
-    logger.info("\n=== Final Test Evaluation ===")
+    # Test with TTA
+    logger.info("\n=== Final Test Evaluation with TTA ===")
     test_dataset = AdvancedXRayDataset(test_paths, test_labels, img_size=384)
-    test_loader = DataLoader(test_dataset, 32, num_workers=4, pin_memory=True)
+    test_loader = DataLoader(test_dataset, batch_size=8, num_workers=4, pin_memory=True)
 
     ema_model.eval()
     test_metrics = {k: [] for k in metrics.keys()}
@@ -368,23 +333,19 @@ def train_model(csv_path):
         for images, labels in tqdm(test_loader, desc="Testing"):
             images = images.to(device)
             labels = labels.to(device)
-
+            preds = tta_predict(ema_model, images, device)
             with torch.autocast(device_type="cuda"):
                 outputs = ema_model(images).squeeze()
                 loss = criterion(outputs, labels)
-                preds = torch.sigmoid(outputs)
-                int_labels = labels.long()
-
+            int_labels = labels.long()
             test_loss.append(loss.item())
             batch_metrics = metrics(preds, int_labels)
             for k in test_metrics:
                 test_metrics[k].append(batch_metrics[k].item())
 
     final_metrics = {k: np.mean(v) for k, v in test_metrics.items()}
-    logger.info("\n=== Final Test Metrics ===")
     logger.info(f"Test Loss: {np.mean(test_loss):.4f}")
-    for k, v in final_metrics.items():
-        logger.info(f"{k}: {v:.4f}")
+    logger.info(f"Final Test Metrics: {final_metrics}")
 
     return final_metrics
 
@@ -396,6 +357,6 @@ if __name__ == '__main__':
         if final_metrics is not None:
             logger.info("Training completed successfully!")
         else:
-            logger.error("Training failed due to NaN loss.")
+            logger.error("Training failed.")
     else:
         logger.error(f"Dataset file {DATA_CSV_PATH} not found!")

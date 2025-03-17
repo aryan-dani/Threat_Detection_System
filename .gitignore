@@ -24,5 +24,5 @@ __pycache__/
 
 # Ignore large or temporary data directories
 # Excludes directories like Baggages
-Baggages/
+Dataset/
 
