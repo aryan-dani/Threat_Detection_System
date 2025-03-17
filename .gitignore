@@ -1,8 +1,6 @@
 # Ignore Python virtual environments
 # Prevents tracking environment-specific files that vary by user or setup
-env1/
-venv/
-.venv/
+weapon_detection_env/
 
 # Ignore Python compiled and bytecode files
 # These are generated automatically and not needed in version control
