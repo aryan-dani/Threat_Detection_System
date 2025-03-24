@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 
@@ -19,7 +20,8 @@ import { LoadingIndicatorComponent } from './components/loading-indicator/loadin
     RouterModule,
     HttpClientModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     CommonModule,
@@ -29,6 +31,7 @@ import { LoadingIndicatorComponent } from './components/loading-indicator/loadin
     HttpClientModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     LoadingIndicatorComponent
   ]
 })
