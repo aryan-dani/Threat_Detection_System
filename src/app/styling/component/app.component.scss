@@ -1,23 +1,114 @@
 @import '../varibales';
 @import '../mixins';
 
-.app-container {
+.app-wrapper {
   min-height: 100vh;
-  background: linear-gradient(
-    to bottom right,
-    rgba(map-get($colors, 'background'), 0.8),
-    rgba(map-get($colors, 'background'), 0.95)
-  );
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(241, 245, 249, 0.95));
+  overflow-x: hidden;
 }
 
 .main-content {
+  flex: 1;
+  max-width: $max-width;
+  width: 100%;
+  margin: 0 auto;
+  padding: $grid-gap;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: $grid-gap;
+  position: relative;
+  animation: fadeIn 0.6s $transition-smooth;
+
+  @include respond-below('tablet') {
+    grid-template-columns: 1fr;
+    padding: calc($grid-gap / 2);
+  }
+
+  .content-wrapper {
+    width: 100%;
+    animation: slideInRight 0.5s $transition-smooth;
+
+    > * {
+      animation: fadeIn 0.4s $transition-smooth;
+    }
+  }
+}
+
+.page-transition-wrapper {
+  position: relative;
+  width: 100%;
+  
+  &.page-enter {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  &.page-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.4s $transition-smooth;
+  }
+  
+  &.page-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  &.page-exit-active {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s $transition-smooth;
+  }
+}
+
+// Global utility classes
+.container {
+  width: 100%;
   max-width: $max-width;
   margin: 0 auto;
-  padding: 1.5rem;
-  animation: fadeIn 0.3s ease-out;
+  padding: 0 $grid-gap;
+  
+  @include respond-below('mobile') {
+    padding: 0 calc($grid-gap / 2);
+  }
+}
 
-  @media (max-width: 768px) {
-    padding: 1rem;
+.section {
+  margin: $grid-gap 0;
+  
+  &__header {
+    @include flex-between;
+    margin-bottom: $grid-gap;
+  }
+  
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: map-get($colors, 'surface');
+    margin: 0;
+    
+    @include respond-below('mobile') {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+// Glass card variations
+.glass-card {
+  @include glass-morphism;
+  padding: $grid-gap;
+  border-radius: $card-radius;
+  
+  &--hover {
+    @extend .glass-card;
+    @include card-hover;
+  }
+  
+  &--interactive {
+    @extend .glass-card;
+    @include interactive;
   }
 }
 

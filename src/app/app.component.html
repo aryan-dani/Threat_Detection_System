@@ -1,6 +1,10 @@
-<div class="app-container">
-  <app-header></app-header>
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
+<div class="app-wrapper">
+    <app-header></app-header>
+    <main class="main-content">
+        <div class="content-wrapper">
+            <router-outlet></router-outlet>
+        </div>
+        <app-detection-log></app-detection-log>
+    </main>
+    <app-footer></app-footer>
 </div>

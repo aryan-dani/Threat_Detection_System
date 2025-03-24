@@ -1,0 +1,70 @@
+@import './styling/varibales';
+@import './styling/mixins';
+
+:host {
+    display: block;
+    min-height: 100vh;
+}
+
+.app-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, rgba(245, 245, 245, 0.8), rgba(245, 245, 245, 0.95));
+}
+
+.main-content {
+    flex: 1;
+    padding: 1.5rem;
+    margin-right: 400px; // Space for detection log
+    transition: margin-right 0.3s ease;
+    max-width: calc(100vw - 400px); // Prevent content from going under the log
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 auto;
+    gap: 2rem;
+    position: relative;
+    z-index: 1;
+    transition: padding 0.3s ease;
+
+    @media (max-width: 1024px) {
+        margin-right: 0;
+        max-width: 100%;
+        padding: 1rem;
+        flex-direction: column;
+    }
+
+    @media (max-width: 768px) {
+        padding-top: calc(#{$header-height} + 500px); // Slightly more space on mobile
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+.content-wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+    flex: 1;
+    min-width: 0; // Prevent flex child from overflowing
+}
+
+.content-container {
+    width: 100%;
+    max-width: $max-width;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -2,16 +2,26 @@ $themes: (
   light: (
     'background': #f8fafc,
     'surface': #1e293b,
-    'primary': #4f46e5,
+    'primary': #2563eb,
     'text': #1e293b,
     'text-secondary': #64748b,
+    'card': rgba(255, 255, 255, 0.95),
+    'card-hover': rgba(255, 255, 255, 0.98),
+    'border': rgba(0, 0, 0, 0.05),
+    'shadow': rgba(0, 0, 0, 0.1),
+    'overlay': rgba(255, 255, 255, 0.8)
   ),
   dark: (
     'background': #0f172a,
     'surface': #1e293b,
-    'primary': #818cf8,
+    'primary': #3b82f6,
     'text': #f1f5f9,
     'text-secondary': #94a3b8,
+    'card': rgba(30, 41, 59, 0.95),
+    'card-hover': rgba(30, 41, 59, 0.98),
+    'border': rgba(255, 255, 255, 0.05),
+    'shadow': rgba(0, 0, 0, 0.2),
+    'overlay': rgba(15, 23, 42, 0.8)
   )
 );
 
@@ -26,4 +36,13 @@ $themes: (
       $theme-map: null !global;
     }
   }
+}
+
+// Theme transition
+.theme-transition {
+  transition: 
+    background-color 0.3s $transition-smooth,
+    color 0.3s $transition-smooth,
+    border-color 0.3s $transition-smooth,
+    box-shadow 0.3s $transition-smooth;
 }

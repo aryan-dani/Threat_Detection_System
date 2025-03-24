@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { SystemMonitorService } from '../services/system-monitor.service';
-import { Subscription, catchError, retry, timer, of, Subject } from 'rxjs';
+import { Subscription, catchError, of, Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { trigger, transition, style, animate, state, query, stagger } from '@angular/animations';
-import { takeUntil, take, timeout } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 interface ActivityLogEntry {
   type: 'error' | 'warning' | 'info';
@@ -86,8 +86,6 @@ export class SystemStatusComponent implements OnInit, OnDestroy {
   selectedSeverity: 'all' | 'critical' | 'moderate' | 'low' = 'all';
   severityOptions: Array<'all' | 'critical' | 'moderate' | 'low'> = ['all', 'critical', 'moderate', 'low'];
 
-  private readonly ANIMATION_DURATION = 300;
-  private readonly UPDATE_INTERVAL = 60000; // 1 minute update
   private errorRetryCount = 0;
   private readonly MAX_RETRY_ATTEMPTS = 3;
   isError = false;
@@ -171,12 +169,6 @@ export class SystemStatusComponent implements OnInit, OnDestroy {
       return 'warning';
     }
     return 'healthy';
-  }
-
-  private handleInitialLoadError(error: any) {
-    this.isError = true;
-    this.errorMessage = 'Failed to connect to the monitoring service. Please check if the service is running.';
-    console.error('Initial load error:', error);
   }
 
   private setupMouseEffects() {

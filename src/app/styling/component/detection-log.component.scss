@@ -1,102 +1,179 @@
 @import '../varibales';
 @import '../mixins';
 
+:host {
+    display: block;
+    position: relative;
+    width: 400px;
+    height: calc(100vh - 7rem);
+    z-index: map-get($z-index, 'sticky');
+}
+
 .detection-log {
-    position: sticky;
-    top: calc($header-height + 1rem); // Adjusted to account for header height
-    background: linear-gradient(to bottom right, 
-        rgba(255, 255, 255, 0.9), 
-        rgba(255, 255, 255, 0.8)
-    );
-    backdrop-filter: blur(10px);
-    box-shadow: map-get($shadows, 'lg');
+    @include glass-morphism;
+    height: 100%;
     border-radius: $card-radius;
-    padding: 1.25rem; // Reduced padding
-    height: auto; // Changed from 100% to auto
-    max-height: calc(100vh - $header-height - 2rem);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    z-index: 10; // Added z-index to ensure it stays above other content
-    transition: transform 0.2s ease; // Added smooth transition
+    animation: fadeIn 0.5s $transition-smooth;
+
+    &.collapsed {
+        transform: translateX(calc(100% - 48px));
+
+        .detection-log__collapse-btn {
+            background: linear-gradient(to right, rgba(52, 152, 219, 0.3), rgba(52, 152, 219, 0.4));
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+            
+            &:hover {
+                background: linear-gradient(to right, rgba(52, 152, 219, 0.4), rgba(52, 152, 219, 0.5));
+                transform: translateX(-4px);
+            }
+            
+            .material-icons {
+                color: #fff;
+            }
+        }
+
+        .detection-log__header-content {
+            flex-direction: row-reverse;
+        }
+    }
+
+    &__collapse-btn {
+        position: absolute;
+        left: -24px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 60px;
+        border-radius: 12px 0 0 12px;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.9));
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-right: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+        box-shadow: -4px 0 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.95));
+            box-shadow: -6px 0 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-50%) translateX(-2px);
+        }
+
+        .material-icons {
+            font-size: 20px;
+            color: #1e293b;
+            transition: transform 0.3s ease;
+        }
+
+        &:hover .material-icons {
+            transform: scale(1.1);
+        }
+    }
+
+    &__main {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
 
     &__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem; // Reduced margin
+        padding: 1.25rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: $card-radius $card-radius 0 0;
+    }
+
+    &__header-content {
+        @include flex-between;
     }
 
     &__title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: map-get($colors, 'surface');
+        background: linear-gradient(135deg, map-get($colors, 'surface'), map-get($colors, 'primary'));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin: 0;
     }
 
-    &__filter-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
+    &__actions {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(map-get($colors, 'surface'), 0.1);
-        transition: all $transition-base;
-        background: linear-gradient(
-            135deg,
-            rgba(map-get($colors, 'surface'), 0.1),
-            rgba(map-get($colors, 'surface'), 0.05)
-        );
+        gap: 0.5rem;
+    }
+
+    &__action-btn {
+        @include interactive;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
         box-shadow: map-get($shadows, 'sm');
-        backdrop-filter: blur(4px);
 
         .material-icons {
             font-size: 20px;
             color: map-get($colors, 'surface');
+            transition: transform $transition-smooth;
         }
 
         &:hover {
-            background: linear-gradient(
-                135deg,
-                rgba(map-get($colors, 'surface'), 0.15),
-                rgba(map-get($colors, 'surface'), 0.1)
-            );
-            transform: translateY(-1px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            box-shadow: map-get($shadows, 'md');
+
+            .material-icons {
+                transform: rotate(180deg);
+            }
         }
+    }
+
+    &__content {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__filters {
+        padding: 1.25rem;
+        background: rgba(255, 255, 255, 0.5);
+        animation: slideDown 0.3s $transition-smooth;
     }
 
     &__list {
         flex: 1;
         overflow-y: auto;
-        padding-right: 0.75rem;
-        margin-right: -0.75rem;
-        max-height: calc(100vh - $header-height - 6rem); // Better height calculation
+        padding: 1rem;
+        @include stagger-children(0.1s, 0.05s);
 
         &::-webkit-scrollbar {
             width: 6px;
-            height: 6px;
         }
 
         &::-webkit-scrollbar-track {
-            background: rgba(map-get($colors, 'surface'), 0.05);
-            border-radius: 2px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 3px;
         }
 
         &::-webkit-scrollbar-thumb {
-            background: rgba(map-get($colors, 'surface'), 0.2);
+            background: linear-gradient(180deg, rgba(map-get($colors, 'primary'), 0.2), rgba(map-get($colors, 'primary'), 0.3));
             border-radius: 3px;
+            transition: background 0.3s ease;
 
             &:hover {
-                background: rgba(map-get($colors, 'surface'), 0.3);
+                background: linear-gradient(180deg, rgba(map-get($colors, 'primary'), 0.3), rgba(map-get($colors, 'primary'), 0.4));
             }
         }
     }
 
-    &__filters {
-        background: rgba(map-get($colors, 'surface'), 0.02);
-        padding: 0.75rem;
-        border-radius: $card-radius;
-        margin-bottom: 0.75rem;
+    @media (max-width: 1024px) {
+        height: 400px;
+        margin-bottom: 1rem;
     }
 }
 
@@ -108,41 +185,99 @@
         margin-bottom: 0.5rem;
         font-size: 0.875rem;
         color: map-get($colors, 'surface');
+        font-weight: 500;
     }
 
-    input[type="range"],
-    select {
+    .filter-slider {
         width: 100%;
+        height: 4px;
+        background: rgba(map-get($colors, 'surface'), 0.1);
+        border-radius: 2px;
+        appearance: none;
+        -webkit-appearance: none;
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: map-get($colors, 'primary');
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform $transition-smooth;
+            box-shadow: map-get($shadows, 'sm');
+
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+    }
+
+    .filter-select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid rgba(map-get($colors, 'surface'), 0.1);
+        border-radius: $btn-radius;
+        background: white;
+        color: map-get($colors, 'surface');
+        font-size: 0.875rem;
+        transition: all $transition-base;
+
+        &:hover {
+            border-color: map-get($colors, 'primary');
+        }
+
+        &:focus {
+            outline: none;
+            border-color: map-get($colors, 'primary');
+            box-shadow: map-get($shadows, 'glow');
+        }
     }
 }
 
 .detection-item {
-    border: 1px solid rgba(map-get($colors, 'surface'), 0.08);
+    @include card-hover;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: $card-radius;
-    margin-bottom: 0.5rem; // Reduced margin
-    overflow: hidden;
-    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    animation: fadeSlideIn 0.5s $transition-smooth both;
+
+    @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$i * 0.1}s;
+        }
+    }
 
     &:hover {
-        transform: translateX(4px);
-        border-color: rgba(map-get($colors, 'primary'), 0.2);
+        transform: translateY(-4px) translateX(2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        background: rgba(255, 255, 255, 0.9);
     }
 
     &__header {
-        padding: 0.75rem; // Reduced padding
+        padding: 1rem;
         cursor: pointer;
         display: flex;
         align-items: flex-start;
         gap: 1rem;
-        transition: background $transition-base;
+        transition: all $transition-base;
 
         &:hover {
-            background: rgba(map-get($colors, 'surface'), 0.02);
+            background: rgba(map-get($colors, 'primary'), 0.05);
         }
     }
 
     &__icon {
-        color: map-get($colors, 'gray');
+        padding: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(map-get($colors, 'primary'), 0.1), rgba(map-get($colors, 'primary'), 0.2));
+        color: map-get($colors, 'primary');
+        transition: all $transition-smooth;
+
+        .detection-item:hover & {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, rgba(map-get($colors, 'primary'), 0.15), rgba(map-get($colors, 'primary'), 0.25));
+        }
     }
 
     &__info {
@@ -150,12 +285,18 @@
     }
 
     &__title {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-weight: 500;
+        @include flex-between;
+        font-weight: 600;
         color: map-get($colors, 'surface');
         margin-bottom: 0.5rem;
+
+        .expand-icon {
+            transition: transform $transition-smooth;
+        }
+
+        &:hover .expand-icon {
+            transform: translateY(-2px);
+        }
     }
 
     &__details {
@@ -168,21 +309,22 @@
     }
 
     &__image {
-        padding: 0.75rem; // Reduced padding
-        border-top: 1px solid rgba(map-get($colors, 'surface'), 0.1);
-        background: rgba(map-get($colors, 'surface'), 0.02);
+        padding: 0.75rem;
+        background: rgba(0, 0, 0, 0.02);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        animation: expandIn 0.4s $transition-smooth;
 
         img {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-radius: calc($card-radius * 0.5);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform $transition-base;
+            border-radius: calc($card-radius * 0.75);
+            box-shadow: map-get($shadows, 'md');
+            transition: all $transition-smooth;
 
             &:hover {
                 transform: scale(1.02);
-                cursor: pointer;
+                box-shadow: map-get($shadows, 'lg');
             }
         }
 
@@ -197,16 +339,51 @@
     }
 
     &.high-risk {
-        border-left: 4px solid #ef4444;
-        animation: highlight 2s infinite;
+        border-left: 4px solid map-get($colors, 'danger');
+        @include pulse('danger');
     }
 
     &.medium-risk {
-        border-left: 4px solid #f59e0b;
+        border-left: 4px solid map-get($colors, 'warning');
     }
 
     &.low-risk {
-        border-left: 4px solid #10b981;
+        border-left: 4px solid map-get($colors, 'success');
+    }
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes expandIn {
+    from {
+        opacity: 0;
+        transform: scaleY(0);
+        transform-origin: top;
+    }
+    to {
+        opacity: 1;
+        transform: scaleY(1);
+        transform-origin: top;
     }
 }
 
@@ -214,4 +391,35 @@
     0% { background-color: rgba(239, 68, 68, 0); }
     50% { background-color: rgba(239, 68, 68, 0.1); }
     100% { background-color: rgba(239, 68, 68, 0); }
+}
+
+@keyframes pulseAlert {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    }
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }

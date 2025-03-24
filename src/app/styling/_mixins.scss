@@ -1,20 +1,37 @@
+// Responsive breakpoints
 @mixin respond-below($breakpoint) {
     @media (max-width: map-get($breakpoints, $breakpoint)) {
         @content;
     }
 }
 
+@mixin respond-above($breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+        @content;
+    }
+}
+
+// Modern flex layouts
 @mixin flex-center {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
-@mixin button-hover {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+@mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+// Enhanced interactions
+@mixin interactive {
+    cursor: pointer;
+    transition: all $transition-smooth;
+    transform-origin: center;
     
     &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
     }
     
     &:active {
@@ -22,11 +39,117 @@
     }
 }
 
-@mixin card-hover {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+// Modern button styles
+@mixin button-hover {
+    transition: all $transition-smooth;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+        transform: translateX(-100%);
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
     
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: map-get($shadows, 'md');
+        
+        &::before {
+            transform: translateX(100%);
+        }
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// Modern card styles
+@mixin card-hover {
+    transition: all $transition-smooth;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+        transform: translateX(-100%);
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        pointer-events: none;
+    }
+    
+    &:hover {
+        transform: translateY(-4px) scale(1.01);
+        box-shadow: map-get($shadows, 'lg');
+        
+        &::before {
+            transform: translateX(100%);
+        }
+    }
+}
+
+// Glass morphism effect
+@mixin glass-morphism {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: map-get($shadows, 'md');
+}
+
+// Animated underline
+@mixin hover-underline {
+    position: relative;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: currentColor;
+        transition: width $transition-smooth;
+    }
+    
+    &:hover::after {
+        width: 100%;
+    }
+}
+
+// Pulse animation
+@mixin pulse($color: primary) {
+    animation: pulse 2s infinite;
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(map-get($colors, $color), 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(map-get($colors, $color), 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(map-get($colors, $color), 0);
+        }
+    }
+}
+
+// Staggered animation
+@mixin stagger-children($initial-delay: 0, $item-delay: 0.1s) {
+    @for $i from 1 through 10 {
+        > *:nth-child(#{$i}) {
+            animation-delay: $initial-delay + ($i * $item-delay);
+        }
     }
 }

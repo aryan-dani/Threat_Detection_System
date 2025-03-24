@@ -1,0 +1,95 @@
+<div class="dashboard-container">
+    <div class="stats-overview">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card__header">
+                    <span class="stat-card__title">Total Detections</span>
+                    <span class="material-icons">security</span>
+                </div>
+                <div class="stat-card__value">{{totalDetections}}</div>
+                <div class="stat-card__change" [class.positive]="detectionTrend > 0">
+                    {{detectionTrend}}% from last week
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card__header">
+                    <span class="stat-card__title">Active Alerts</span>
+                    <span class="material-icons">warning</span>
+                </div>
+                <div class="stat-card__value">{{activeAlerts}}</div>
+                <div class="stat-card__change" [class.positive]="alertTrend < 0">
+                    {{alertTrend}}% from yesterday
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card__header">
+                    <span class="stat-card__title">System Health</span>
+                    <span class="material-icons">health_and_safety</span>
+                </div>
+                <div class="stat-card__value">{{systemHealth}}%</div>
+                <div class="stat-card__change positive">Optimal Performance</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="analysis-cards">
+        <div class="analysis-grid">
+            <div class="analysis-card lg-col-span-2">
+                <h3>Detection Distribution</h3>
+                <div class="chart-container">
+                    <!-- Chart content -->
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <h3>Recent Activity</h3>
+                <div class="activity-list">
+                    <div class="activity-item" *ngFor="let activity of recentActivities">
+                        <span class="material-icons" [ngStyle]="{'color': activity.color}">
+                            {{activity.icon}}
+                        </span>
+                        <div class="activity-content">
+                            <div class="activity-title">{{activity.title}}</div>
+                            <div class="activity-time">{{activity.time | date:'short'}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <h3>Performance Metrics</h3>
+                <div class="metrics-list">
+                    <div class="metric-item">
+                        <div class="metric-info">
+                            <span>CPU Usage</span>
+                            <span>{{cpuUsage}}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" [style.width.%]="cpuUsage"></div>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-info">
+                            <span>Memory</span>
+                            <span>{{memoryUsage}}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" [style.width.%]="memoryUsage"></div>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-info">
+                            <span>Storage</span>
+                            <span>{{storageUsage}}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" [style.width.%]="storageUsage"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

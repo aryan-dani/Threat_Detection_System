@@ -34,6 +34,33 @@ export class DataService {
       location: 'Terminal 3',
       imageUrl: 'assets\\detection3.jpg'
     },
+    {
+      id: '4',
+      timestamp: Date.now() - 900000,
+      threatDetected: true,
+      threatType: 'pistol',
+      confidence: 0.76,
+      location: 'Security Gate A',
+      imageUrl: 'assets\\detection2.jpg'
+    },
+    {
+      id: '5',
+      timestamp: Date.now() - 1200000,
+      threatDetected: true,
+      threatType: 'gun',
+      confidence: 0.92,
+      location: 'Parking Area B',
+      imageUrl: 'assets\\detection1.jpg'
+    },
+    {
+      id: '6',
+      timestamp: Date.now() - 1800000,
+      threatDetected: true,
+      threatType: 'knife',
+      confidence: 0.82,
+      location: 'Food Court',
+      imageUrl: 'assets\\detection4.jpg'
+    }
   ]);
 
   getDetections() {

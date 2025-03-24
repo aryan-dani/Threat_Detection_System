@@ -53,15 +53,208 @@
   &-container {
     display: grid;
     grid-template-columns: 1fr;
-    gap: $grid-gap;
-    max-width: $max-width;
-    margin: 0 auto;
-    padding: 1rem;
-    
-    @media (min-width: 1024px) {
-      grid-template-columns: 2.5fr 1fr; // Adjusted ratio
+    gap: 1.5rem;
+    width: 100%;
+
+    .dashboard-main {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .dashboard-sidebar {
+      display: none; // Hide the sidebar since detection log is now handled by app layout
+    }
+
+    .stats-overview {
+      margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 16px;
       padding: 1.5rem;
-      gap: 1.5rem; // Increased gap
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+        transform: translateX(-100%);
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+
+        &::before {
+          transform: translateX(100%);
+        }
+      }
+
+      &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        
+        .material-icons {
+          font-size: 24px;
+          color: #3498db;
+          transition: transform 0.3s ease;
+        }
+      }
+
+      &__title {
+        font-size: 0.875rem;
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      &__value {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+
+      &__change {
+        font-size: 0.875rem;
+        color: #ef4444;
+
+        &.positive {
+          color: #22c55e;
+        }
+      }
+    }
+
+    .analysis-cards {
+      margin-top: 2rem;
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .analysis-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1.5rem;
+      }
+
+      &.lg-col-span-2 {
+        grid-column: span 2;
+
+        @media (max-width: 1024px) {
+          grid-column: span 1;
+        }
+      }
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.5);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: translateX(4px);
+      }
+
+      .material-icons {
+        font-size: 20px;
+      }
+
+      .activity-content {
+        flex: 1;
+      }
+
+      .activity-title {
+        font-weight: 500;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+      }
+
+      .activity-time {
+        font-size: 0.875rem;
+        color: #64748b;
+      }
+    }
+
+    .metrics-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .metric-item {
+      .metric-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: #1e293b;
+      }
+
+      .progress-bar {
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+
+        .progress {
+          height: 100%;
+          background: linear-gradient(90deg, #3498db, #2980b9);
+          border-radius: 4px;
+          transition: width 0.3s ease-in-out;
+        }
+      }
+    }
+
+    .chart-container {
+      height: 300px;
+      width: 100%;
     }
   }
 

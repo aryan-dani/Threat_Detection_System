@@ -1,51 +1,67 @@
+// Modern color palette with enhanced vibrancy
 $colors: (
-    'primary': #404040,    // Dark gray
-    'surface': #292929,    // Darker gray
-    'white': #ffffff,      // White
-    'gray': #999999,      // Medium gray
-    'success': #666666,    // Gray for success
-    'warning': #808080,    // Medium gray for warning
-    'danger': #333333,     // Dark gray for danger
-    'background': #f5f5f5, // Light gray
-    'accent': #595959,     // Gray accent
-    'red': #ff8383,        // Light red
+    'primary': #2563eb,    // Bright blue
+    'surface': #1e293b,    // Navy blue
+    'white': #ffffff,      
+    'gray': #64748b,       // Slate gray
+    'success': #10b981,    // Emerald
+    'warning': #f59e0b,    // Amber
+    'danger': #ef4444,     // Red
+    'background': #f8fafc, // Light blue-gray
+    'accent': #8b5cf6,     // Purple
+    'muted': #94a3b8,      // Muted blue-gray
 );
 
 $colors-dark: (
-  'background': #1a1a1a,
-  'surface': #292929,
-  'primary': #666666,
-  'white': #ffffff,
-  'gray': #999999,
-  'success': #808080,
-  'warning': #737373,
-  'danger': #4d4d4d,
-  'text': #f5f5f5,
-  'text-secondary': #999999,
+    'background': #0f172a,
+    'surface': #1e293b,
+    'primary': #3b82f6,
+    'white': #ffffff,
+    'gray': #94a3b8,
+    'success': #34d399,
+    'warning': #fbbf24,
+    'danger': #f87171,
+    'accent': #a78bfa,
+    'muted': #64748b
 );
 
 $breakpoints: (
     'mobile': 768px,
+    'tablet': 1024px,
+    'desktop': 1280px,
+    'wide': 1536px
 );
 
+// Enhanced transitions and animations
 $transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-$max-width: 1440px;        // Increased max-width
+$transition-smooth: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+$transition-spring: 0.6s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+
+$max-width: 1440px;
 $header-height: 4rem;
 
-$card-colors: (
-    'active': #666666,
-    'inactive': #4d4d4d,
-    'hover': rgba(0, 0, 0, 0.05)
-);
-
-$grid-gap: 1.25rem;
-$card-radius: 1rem;        // More rounded corners
-$transition-speed: 0.2s;
-
+// Enhanced shadows with depth
 $shadows: (
     'sm': '0 1px 2px rgba(0, 0, 0, 0.05)',
-    'md': '0 4px 6px rgba(0, 0, 0, 0.07)',
-    'lg': '0 10px 15px rgba(0, 0, 0, 0.08)',
-    'glow': '0 0 20px rgba(79, 70, 229, 0.15)', // Indigo glow
+    'md': '0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05)',
+    'lg': '0 10px 15px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.05)',
+    'xl': '0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04)',
+    'glow': '0 0 20px rgba(37, 99, 235, 0.15)',
     'inner': 'inset 0 2px 4px rgba(0, 0, 0, 0.06)'
+);
+
+// Layout variables
+$grid-gap: 1.5rem;
+$card-radius: 1rem;
+$btn-radius: 0.5rem;
+
+// Z-index stack
+$z-index: (
+    'base': 1,
+    'dropdown': 10,
+    'sticky': 20,
+    'fixed': 30,
+    'modal': 40,
+    'popover': 50,
+    'tooltip': 60
 );
