@@ -5,17 +5,18 @@
   min-height: 100vh;
 }
 .system-status-page .status-overview {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
   border-radius: 24px;
   padding: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   margin-bottom: 2rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
 }
 .system-status-page .status-overview:hover {
-  transform: translateY(-4px);
+  transform: scale(1.01);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 .system-status-page .status-header {
@@ -62,39 +63,49 @@
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
+  position: relative;
+  overflow: hidden;
+}
+.system-status-page .metric-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 .system-status-page .metric-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+.system-status-page .metric-card:hover::before {
+  transform: translateX(100%);
+}
+.system-status-page .metric-card:hover .material-icons {
+  transform: scale(1.1);
 }
 .system-status-page .metric-card .material-icons {
   font-size: 2.25rem;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  padding: 14px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.15);
+  filter: drop-shadow(0 2px 4px rgba(52, 152, 219, 0.2));
 }
 .system-status-page .metric-card.warning .material-icons {
   background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(241, 196, 15, 0.2));
 }
 .system-status-page .metric-card.error .material-icons {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(231, 76, 60, 0.2));
 }
 .system-status-page .metric-card.success .material-icons {
   background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
@@ -149,15 +160,16 @@
   transition: all 0.3s ease;
 }
 .system-status-page .activity-log {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
   border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  margin-top: 2rem;
-  position: relative;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.4s ease;
+}
+.system-status-page .activity-log:hover {
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
 }
 .system-status-page .activity-log .activity-header {
   display: flex;
@@ -294,10 +306,42 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  animation: fadeSlideIn 0.4s ease-out;
+  animation-fill-mode: both;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(6) {
+  animation-delay: 0.6s;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(7) {
+  animation-delay: 0.7s;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(8) {
+  animation-delay: 0.8s;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(9) {
+  animation-delay: 0.9s;
+}
+.system-status-page .activity-log .log-entries .log-entry:nth-child(10) {
+  animation-delay: 1s;
 }
 .system-status-page .activity-log .log-entries .log-entry:hover {
-  transform: translateX(4px) translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transform: translateX(8px);
+  background: rgba(255, 255, 255, 0.9);
 }
 .system-status-page .activity-log .log-entries .log-entry:last-child {
   margin-bottom: 0;
@@ -376,6 +420,9 @@
 }
 .system-status-page .activity-log .log-entries .log-entry.highlight {
   animation: highlight 1s ease;
+}
+.system-status-page .activity-log .log-entries .log-entry.critical {
+  animation: pulseAlert 2s infinite;
 }
 .system-status-page .activity-log .log-entries .log-entry.critical .entry-icon .material-icons {
   background: linear-gradient(135deg, #FF8A80, #FF5252);
@@ -550,6 +597,26 @@
     background: #f8f9fa;
   }
 }
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes pulseAlert {
+  0%, 100% {
+    transform: translateX(0);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+  }
+  50% {
+    transform: translateX(4px);
+    box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+  }
+}
 @media (max-width: 768px) {
   .system-status-page {
     padding: 1rem;
@@ -577,4 +644,4 @@
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-}
+}/*# sourceMappingURL=system-status.component.css.map */

@@ -1,0 +1,73 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, rgba(245, 245, 245, 0.8), rgba(245, 245, 245, 0.95));
+}
+
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  margin-right: 400px;
+  transition: margin-right 0.3s ease;
+  max-width: calc(100vw - 400px);
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+  transition: padding 0.3s ease;
+}
+@media (max-width: 1024px) {
+  .main-content {
+    margin-right: 0;
+    max-width: 100%;
+    padding: 1rem;
+    flex-direction: column;
+  }
+}
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: calc(4rem + 500px);
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.content-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
+  min-width: 0;
+}
+
+.content-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease-out;
+}
+
+app-footer {
+  width: 100%;
+  margin-top: auto;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}/*# sourceMappingURL=app.component.css.map */

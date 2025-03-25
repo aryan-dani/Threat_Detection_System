@@ -1,4 +1,4 @@
-<div class="contact-container">
+<div class="contact-container" [@formAnimation]>
     <div class="page-header">
         <h1>Contact Us</h1>
         <p class="subheading">Have questions or feedback? We're here to help.</p>
@@ -31,11 +31,6 @@
         
         <div class="contact-form-container">
             <h2>Send us a message</h2>
-            
-            <div *ngIf="formSuccess" class="success-message">
-                <i class="fas fa-check-circle"></i>
-                <p>Thank you for your message! We'll get back to you shortly.</p>
-            </div>
             
             <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" *ngIf="!formSuccess">
                 <div class="form-group">
@@ -96,6 +91,21 @@
                     <button type="submit" class="submit-btn">Send Message</button>
                 </div>
             </form>
+            
+            <div class="success-message" *ngIf="formSuccess" [@successAnimation]>
+                <div class="success-icon">✓</div>
+                <h2>Thank you for your message!</h2>
+                <p>We've received your inquiry and will respond soon.</p>
+            </div>
         </div>
+    </div>
+</div>
+
+<!-- Toast notification system -->
+<div class="toast-container" [@toastAnimation]="showToast ? 'show' : 'hide'" *ngIf="showToast">
+    <div class="toast-notification" [ngClass]="toastType">
+        <div class="toast-icon">{{toastIcon}}</div>
+        <div class="toast-content">{{toastMessage}}</div>
+        <button class="toast-close" (click)="hideToast()">×</button>
     </div>
 </div>
