@@ -26,6 +26,18 @@ export const routes: Routes = [
     path: 'system-status',
     loadComponent: () => import('./system-status/system-status.component').then(m => m.SystemStatusComponent)
   },
+  {
+    path: 'privacy',
+    loadComponent: () => import('./pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+  },
+  {
+    path: 'terms',
+    loadComponent: () => import('./pages/terms-of-service/terms-of-service.component').then(m => m.TermsOfServiceComponent)
+  },
+  {
+    path: 'contact',
+    loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent)
+  },
   { 
     path: '**', 
     redirectTo: '/dashboard' 

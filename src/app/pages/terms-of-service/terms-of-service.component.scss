@@ -1,0 +1,82 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.terms-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+  .page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    
+    h1 {
+      font-size: 2.2rem;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+    
+    .last-updated {
+      color: #7f8c8d;
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+  }
+  
+  .content-section {
+    h2 {
+      color: #2c3e50;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    
+    p {
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+      color: #34495e;
+    }
+    
+    ul {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+      
+      li {
+        margin-bottom: 0.5rem;
+        line-height: 1.5;
+      }
+    }
+    
+    a {
+      color: #3498db;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .terms-container {
+    padding: 1.5rem;
+    margin: 1rem;
+    
+    .page-header {
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+    
+    .content-section {
+      h2 {
+        font-size: 1.3rem;
+      }
+    }
+  }
+}

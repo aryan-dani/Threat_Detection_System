@@ -1,0 +1,101 @@
+<div class="contact-container">
+    <div class="page-header">
+        <h1>Contact Us</h1>
+        <p class="subheading">Have questions or feedback? We're here to help.</p>
+    </div>
+    
+    <div class="content-section">
+        <div class="contact-info">
+            <div class="info-item">
+                <i class="fas fa-envelope"></i>
+                <div class="info-text">
+                    <h3>Email</h3>
+                    <p><a href="mailto:support@4bits-security.com">daniaryan212&#64;gmail.com</a></p>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-phone"></i>
+                <div class="info-text">
+                    <h3>Phone</h3>
+                    <p>+91 8668205450</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="info-text">
+                    <h3>Address</h3>
+                    <p>123 Security Ave, Suite 500<br>Tech City, TC 98765</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="contact-form-container">
+            <h2>Send us a message</h2>
+            
+            <div *ngIf="formSuccess" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <p>Thank you for your message! We'll get back to you shortly.</p>
+            </div>
+            
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" *ngIf="!formSuccess">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        formControlName="name"
+                        [ngClass]="{'invalid': submitted && f['name'].errors}"
+                    >
+                    <div *ngIf="submitted && f['name'].errors" class="error-message">
+                        <p *ngIf="f['name'].errors['required']">Name is required</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        formControlName="email"
+                        [ngClass]="{'invalid': submitted && f['email'].errors}"
+                    >
+                    <div *ngIf="submitted && f['email'].errors" class="error-message">
+                        <p *ngIf="f['email'].errors['required']">Email is required</p>
+                        <p *ngIf="f['email'].errors['email']">Please enter a valid email address</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input 
+                        type="text" 
+                        id="subject" 
+                        formControlName="subject"
+                        [ngClass]="{'invalid': submitted && f['subject'].errors}"
+                    >
+                    <div *ngIf="submitted && f['subject'].errors" class="error-message">
+                        <p *ngIf="f['subject'].errors['required']">Subject is required</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea 
+                        id="message" 
+                        formControlName="message" 
+                        rows="5"
+                        [ngClass]="{'invalid': submitted && f['message'].errors}"
+                    ></textarea>
+                    <div *ngIf="submitted && f['message'].errors" class="error-message">
+                        <p *ngIf="f['message'].errors['required']">Message is required</p>
+                        <p *ngIf="f['message'].errors['minlength']">Message must be at least 20 characters</p>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
