@@ -2,9 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingService } from '../../../core/services/loading.service';
 import { Observable, of } from 'rxjs';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-loading-indicator',
+  standalone: true,
+  imports: [MatProgressSpinnerModule, NgIf, AsyncPipe],
   template: `
     <div class="loading-overlay" *ngIf="isLoading$ | async" [@fadeInOut]>
       <mat-progress-spinner 

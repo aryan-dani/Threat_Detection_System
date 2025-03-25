@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './footer.component.html',
-  styleUrl: '../styling/component/footer.component.scss'
+  styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
 
