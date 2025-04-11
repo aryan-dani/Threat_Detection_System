@@ -10,9 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 
 @NgModule({
-  declarations: [
-    LoadingIndicatorComponent
-  ],
+  declarations: [LoadingIndicatorComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -21,7 +19,7 @@ import { LoadingIndicatorComponent } from './components/loading-indicator/loadin
     HttpClientModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   exports: [
     CommonModule,
@@ -32,7 +30,7 @@ import { LoadingIndicatorComponent } from './components/loading-indicator/loadin
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    LoadingIndicatorComponent
-  ]
+    LoadingIndicatorComponent,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}
