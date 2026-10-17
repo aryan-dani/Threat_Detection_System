@@ -1,96 +1,170 @@
-# 🚨 Real-Time Multi-Modal Threat Detection System
+# Real-Time Multi-Modal Threat Detection System (v2.0)
 
-Welcome to the **Real-Time Multi-Modal Threat Detection System**! 🔒💻 This project integrates **YOLOv11** and **EfficientNetV2** through an adaptive Angular frontend to deliver a cutting-edge solution for automated threat detection in CCTV footage and X-ray scans. Developed by Aryan Hardik Dani, Swayamprakash Patro, Sobaan M. Jagirdaar, and Prakhar Jaiswal at MIT World Peace University, this system addresses the limitations of traditional surveillance by achieving high accuracy and low latency in real-world security scenarios.
+A high-performance automated computer vision surveillance system designed for real-time weapon and threat detection across optical feeds and security streams. The system couples multi-scale convolutional and vision transformer architectures with a minimal, low-latency monochrome operator console.
 
-## 🌟 Project Motivation
+Originally researched and developed by Aryan Hardik Dani, Swayamprakash Patro, Sobaan M. Jagirdaar, and Prakhar Jaiswal at MIT World Peace University, and enhanced by Parth Doshi with real-time edge streaming, multi-threat vision backbones, smartphone screen threat inspection, and invariant false-positive suppression.
 
-Rising violent attacks and the limitations of human monitoring (e.g., cognitive overload, high false alarm rates) demand advanced surveillance systems. Our goal was to create an automated, reliable threat detection framework that:
-- Detects weapons in real-time CCTV feeds with **YOLOv11**.
-- Classifies X-ray scans with **EfficientNetV2**.
-- Reduces human error and enhances public safety in crowded, high-stake environments like airports and public spaces.
+---
 
-## 🔥 Features
+## Overview
 
-- 🕵️ **Real-Time Weapon Detection**: Identifies knives, pistols, and guns in CCTV footage at 30 FPS using YOLOv11 (mAP 0.83 @ IoU 0.5).
-- 📡 **X-Ray Threat Classification**: Classifies scans as "threat" or "safe" with 98.99% accuracy using EfficientNetV2.
-- 🎛️ **Adaptive Frontend**: Angular-based dashboard with real-time bounding boxes, confidence thresholding, and reporting (PDF/CSV).
-- 📊 **Synthetic Data Enhancement**: GAN-generated images improve generalization across diverse scenarios.
+Traditional manual security monitoring is vulnerable to cognitive fatigue and elevated false alarm rates. This system provides an automated detection and verification pipeline engineered for optical CCTV feeds and edge video streams:
 
-## 🛠️ Technologies Used
+- Real-Time Optical Threat Detection: Multi-class detection covering handguns, firearms, combat/kitchen knives, and explosive munitions (grenades, bombs).
+- False-Positive Immunity: Topological contour analysis and crop-level secondary verification eliminate false alarms triggered by everyday distractors (scissors, rulers, tools, bare smartphones).
+- Smartphone Screen Threat Inspection: Dedicated sub-region scanning for weapons displayed on mobile device displays during operator screening.
+- Minimal Monochrome Dashboard: High-contrast, dark-mode operator console with real-time telemetry, live incident logging, and evidence snapshot archival.
+- High-Throughput Edge Pipeline: Multi-threaded DirectShow frame acquisition delivering 30+ FPS video streaming with low-latency CPU inference.
 
-- **Python** – Core logic for YOLOv11 and EfficientNetV2 pipelines.
-- **YOLOv11** – Object detection on CCTV feeds (trained on OD-Weapon + synthetic data).
-- **EfficientNetV2** – X-ray classification (trained on GDXray dataset).
-- **Angular** – Frontend framework for real-time visualization and reporting.
-- **GANs (DCGAN)** – Synthetic data generation for robust training.
-- **Git & GitHub** – Version control and project hosting.
+---
 
-## 🚀 Getting Started
+## Detection Engines
 
-Follow these steps to set up and run the system locally:
+The operator console allows seamless runtime switching across specialized model backbones:
 
-1. **Clone this repository:**
-   ```sh
-   git clone https://github.com/aryan-dani/Threat-Detection-System.git
-2. **Navigate to the project directory:**
-   ```sh
-   cd Threat-Detection-System
-3. **Install dependencies:**
-   ```sh
+| Engine Key | Architecture | Classes Supported | Primary Use Case |
+| :--- | :--- | :--- | :--- |
+| `sota_threat` (Default) | YOLOv8n Multi-Threat | Gun, Grenade, Knife, Explosion | Primary real-time multi-threat surveillance with native grenade detection |
+| `yolo11_tactical` | YOLOv11m Tactical (100 Epochs) | Gun, Knife | High-capacity tactical armament detection |
+| `extended` | YOLOv8x Extended | Gun, Rifle, Heavy Weapon, Knife | Extended long-range armament surveillance |
+| `world` | YOLO-World v2 | Open-Vocabulary Prompts | Zero-shot open-vocabulary threat scanning with negative prompt grounding |
+| `legacy` | YOLOv8n Dual-Class Nano | Pistol, Knife | Baseline lightweight model |
+
+---
+
+## False Positive Mitigation Pipeline
+
+Standard object detection models frequently misclassify non-threatening geometric lookalikes. Version 2.0 incorporates an invariant multi-stage rejection pipeline:
+
+1. Topological Euler Loop Filter: Evaluates object contour hierarchy using `cv2.RETR_CCOMP`. Scissor handles physically require two enclosed finger loops, whereas solid firearm grips have at most one trigger guard opening. Candidates exhibiting dual enclosed holes are suppressed in under 0.05 ms.
+2. Crop-Level Verification: Candidates flagged as potential weapons undergo focused verification at 320px against ground-truth distractor classes (scissors, tools).
+3. Smartphone Screen Discriminator: Separates bare mobile phone bodies from weapons displayed on screen. When a phone is identified, the screen sub-region is isolated and scanned for displayed munitions without generating false firearm alarms on the phone chassis.
+4. Aspect Ratio Filtering: Reject long, narrow items (such as rulers and scales) exceeding an aspect ratio threshold of 3.0.
+5. Knife Recall Booster: Incorporates dual-model recall boosting to guarantee reliable detection of yellow-handled kitchen knives, chef cutlery, and utility blades.
+
+---
+
+## System Architecture
+
+```
+Camera Feed (DirectShow Threaded Grabber @ 30+ FPS)
+    |
+    v
+Primary Detection Backbone (imgsz=480 @ SOTA Multi-Threat AI)
+    |
+    +---> Handgun / Firearm Candidate
+    |         |
+    |         +---> Aspect Ratio > 3.0? -----------> Suppress (Ruler / Scale)
+    |         +---> Euler Holes >= 2? -------------> Suppress (Scissors Handles)
+    |         +---> 320px Crop Verification? ------> Suppress (Verified Distractor)
+    |         +---> Overlaps Phone Body? ----------> Defer to Screen Scanner
+    |         +---> Invariant Passes --------------> Trigger CRITICAL Threat Alert
+    |
+    +---> Knife / Blade Candidate
+    |         |
+    |         +---> 320px Scissor Check? ----------> Suppress if Shears
+    |         +---> Ground-Truth Boost ------------> Trigger Confirmed Knife Alert
+    |
+    +---> Grenade / Explosive Candidate -----------> Trigger CRITICAL Threat Alert
+    |
+    +---> Smartphone Screen Scanner
+              |
+              +---> Crop Screen Sub-Region
+              +---> Detect Displayed Munition -----> Trigger Screen Threat Alert
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.10+
+- Webcam or DirectShow-compatible video capture device
+- Windows, Linux, or macOS
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/AlcesOzdst/Threat_Detection_System.git
+   cd Threat_Detection_System
+   ```
+
+2. Install dependencies:
+   ```bash
    pip install -r requirements.txt
-4. **Set up the Angular frontend:**
-   ```sh
-   cd frontend
-   npm install
-   ng serve
+   ```
 
-## 📌Future Plans
+### Running the Web Console
 
-- Expand dataset with more weapon classes and 3D X-ray scans.
-- Integrate federated learning for cross-platform robustness.
-- Optimize for edge devices with reduced computational overhead.
+Start the Flask surveillance application:
 
-## 🎯 What We Learned
+```bash
+python web_app/app.py
+```
 
-This project enhanced our skills in:
+Open your browser and navigate to:
+```
+http://localhost:8000
+```
 
-- Real-time computer vision with YOLOv11.
-- Efficient deep learning classification with EfficientNetV2.
-- Frontend-backend integration using Angular.
-- Synthetic data generation with GANs for model generalization.
+To access from other devices on the same local network, use the network IP displayed in the terminal output (e.g., `http://<LAN_IP>:8000`).
 
-## 📊 Results
+---
 
-- **YOLOv11**: mAP 0.83 (IoU 0.5), Precision 0.90, Recall 0.90, F1 0.87.
-- **EfficientNetV2**: Accuracy 98.99%, AUC 0.999, F1 0.9934.
-- Outperforms baselines like YOLOv8 (mAP 0.78) and HVGG19 (AUC 0.95).
+## Project Structure
 
-See the [paper](#) for detailed metrics and comparisons. *(Link to paper TBD.)*
+```
+Threat_Detection_System/
+|-- Documentation/
+|   |-- PROJECT_LOGBOOK.md           # Master chronological project logbook
+|   |-- TECH_STACK_SPECIFICATION.md  # Detailed technical specification
+|   `-- Log Book.pdf                 # Historical academic logbook
+|-- web_app/
+|   |-- app.py                       # Flask application backend
+|   |-- detector.py                  # Threaded video capture & detection pipeline
+|   |-- templates/
+|   |   `-- index.html               # Minimalist monochrome web UI
+|   `-- static/
+|       |-- css/styles.css           # High-contrast industrial design system
+|       |-- js/main.js               # Frontend telemetry & alert logic
+|       `-- snapshots/               # Threat evidence snapshot archive
+|-- weights/                         # Pre-trained model checkpoints (git-ignored)
+|-- requirements.txt                 # Python project dependencies
+`-- README.md                        # Project documentation
+```
 
-## 🤝 Contributing
+---
 
-Want to enhance this system? We welcome contributions! Here’s how:
+## Authors & Contributors
 
-1. Fork the Repository
-2. Create a New Branch (`git checkout -b feature-name`)
-3. Commit Your Changes (`git commit -m "Add some feature"`)
-4. Push to the Branch (`git push origin feature-name`)
-5. Open a Pull Request 🚀
+- **Parth Doshi**
+  - Email: parthdoshi404@gmail.com
+  - Website: [parthdoshi.me](https://www.parthdoshi.me)
 
-Suggestions, bug reports, and feedback are appreciated! 😊
+- **Aryan Hardik Dani**
+  - Email: 1032220083@mitwpu.edu.in
+  - LinkedIn: [Aryan Dani](https://linkedin.com/in/aryandani/)
 
-## 📬 Contact
+- **Swayamprakash Patro**
+- **Sobaan M. Jagirdaar**
+- **Prakhar Jaiswal**
 
-Reach out to the team for questions or collaboration:
+### Institution & Acknowledgments
 
-- 📧 **Email:** 1032220083@mitwpu.edu.in
-- 🔗 **LinkedIn:** [Aryan Dani](https://linkedin.com/in/aryandani/) *(Update with actual profiles.)*
-- 🌐 **Institution:** [MIT World Peace University](https://mitwpu.edu.in)
+- **Institution**: [MIT World Peace University](https://mitwpu.edu.in)
+- **Acknowledgments**: We thank Dr. Vishwanath Karad MIT World Peace University for supporting the baseline research, and the open-source community for computer vision architectures and tooling.
 
-## 📄 License
+---
 
-This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+## Documentation Links
 
-## 🙏 Acknowledgments
+- [Technical Stack Specification](Documentation/TECH_STACK_SPECIFICATION.md): Detailed hardware, backend, ML model, and frontend specifications.
+- [Project Logbook](Documentation/PROJECT_LOGBOOK.md): Chronological record of project development from baseline models through Phase 6 real-time optimization.
 
-We thank Dr. Vishwanath Karad MIT World Peace University for supporting this research, and the open-source community for tools like YOLOv11 and EfficientNetV2.
+---
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Detection System | Operations Feed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation Bar -->
+        <header class="app-header">
+            <div class="brand">
+                <span class="system-status-dot" id="systemStatusDot"></span>
+                <span class="brand-title">THREAT DETECTION CONSOLE</span>
+                <span class="version-tag">v2.4 // REAL-TIME CV</span>
+            </div>
+            <div class="system-meta">
+                <div class="meta-item">
+                    <span class="meta-label">SOURCE:</span>
+                    <span class="meta-value" id="activeSourceText">OPTICAL_FEED_01</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">STREAM:</span>
+                    <span class="meta-value" id="fpsDisplay">--</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">INFERENCE:</span>
+                    <span class="meta-value" id="inferFpsDisplay">--</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">STATUS:</span>
+                    <span class="status-indicator-badge status-idle" id="globalStatusBadge">MONITORING</span>
+                </div>
+                <div class="meta-item clock-item">
+                    <span id="digitalClock">--:--:-- UTC</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Surveillance Layout -->
+        <main class="main-content">
+            <!-- Left: Video Monitor & Control Bar -->
+            <section class="feed-section">
+                <div class="feed-wrapper" id="feedWrapper">
+                    <div class="feed-header-overlay">
+                        <div class="stream-info">
+                            <span class="record-indicator">● LIVE</span>
+                            <span class="cam-id">CAM-01 [OPTICAL FEED]</span>
+                        </div>
+                        <div class="feed-metrics" id="detectedCountOverlay">THREATS: 0</div>
+                    </div>
+                    
+                    <img id="videoStream" src="/video_feed" alt="Surveillance Stream" class="stream-image">
+                    
+                    <div class="hud-corners">
+                        <div class="corner top-left"></div>
+                        <div class="corner top-right"></div>
+                        <div class="corner bottom-left"></div>
+                        <div class="corner bottom-right"></div>
+                    </div>
+
+                    <div class="alarm-banner" id="alarmBanner">
+                        [ ! ] ACTIVE THREAT DETECTED IN SECTOR 01
+                    </div>
+                </div>
+
+                <!-- Control Bar -->
+                <div class="control-panel">
+                    <div class="control-group">
+                        <label for="cameraSelect">FEED INPUT</label>
+                        <select id="cameraSelect" class="form-control">
+                            <option value="0">Default Webcam (0)</option>
+                            <option value="1">Auxiliary Camera (1)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="engineSelect">DETECTION ENGINE</label>
+                        <select id="engineSelect" class="form-control">
+                            <option value="sota_threat" selected>SOTA Multi-Threat AI (Guns/Grenades/Knives)</option>
+                            <option value="yolo11_tactical">YOLOv11 Tactical Engine (Guns & Blades)</option>
+                            <option value="extended">Extended Armament (Gun/Rifle/Knife)</option>
+                            <option value="world">YOLO-World (Weapons + Bombs)</option>
+                            <option value="legacy">Legacy Capstone Model (Nano)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="confSlider">CONFIDENCE THRESHOLD (<span id="confValue">0.35</span>)</label>
+                        <input type="range" id="confSlider" min="0.20" max="0.90" step="0.05" value="0.35" class="slider-control">
+                    </div>
+
+                    <div class="control-actions">
+                        <button id="toggleAudioBtn" class="btn btn-secondary" title="Toggle audio alert on threat">
+                            <span class="btn-icon">🔇</span> ALARM: OFF
+                        </button>
+                        <button id="snapshotBtn" class="btn btn-secondary">
+                            CAPTURE SNAPSHOT
+                        </button>
+                        <button id="restartFeedBtn" class="btn btn-primary">
+                            RESTART FEED
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right: Activity Log & Threat Analytics Sidebar -->
+            <aside class="sidebar">
+                <!-- Target Classes Display -->
+                <div class="panel target-classes-panel">
+                    <div class="panel-header">
+                        <h2>SURVEILLANCE TARGET CLASSES</h2>
+                        <span class="panel-badge">ZERO-SHOT</span>
+                    </div>
+                    <div class="class-tags" id="classTagsContainer">
+                        <span class="tag">Handgun / Pistol</span>
+                        <span class="tag">Rifle / Firearm</span>
+                        <span class="tag">Knife / Blade</span>
+                        <span class="tag">Grenade</span>
+                        <span class="tag">Bomb / Explosive</span>
+                    </div>
+                </div>
+
+                <!-- Event Log Panel -->
+                <div class="panel log-panel">
+                    <div class="panel-header">
+                        <h2>INCIDENT LOG</h2>
+                        <button id="clearLogBtn" class="btn-link">CLEAR</button>
+                    </div>
+                    <div class="log-table-container">
+                        <table class="log-table" id="logTable">
+                            <thead>
+                                <tr>
+                                    <th>TIME</th>
+                                    <th>CLASS</th>
+                                    <th>CONF</th>
+                                    <th>LEVEL</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logBody">
+                                <tr class="empty-row">
+                                    <td colspan="4">No security incidents detected.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Captured Snapshots Gallery -->
+                <div class="panel gallery-panel">
+                    <div class="panel-header">
+                        <h2>THREAT EVIDENCE ARCHIVE</h2>
+                        <span class="panel-count" id="evidenceCount">0 ITEMS</span>
+                    </div>
+                    <div class="evidence-grid" id="evidenceGrid">
+                        <div class="evidence-empty">No threat snapshots captured.</div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Hidden audio element for audio alert -->
+    <audio id="alertAudio" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/DCkF40FHin3/DFn2k8GH6x4vHJp3VEIn+14/HKqX1KJH+04vHKqX1KJX+04vHKqX1KJX+04vHKqX1KJX+04vHKqX1KJX+04vHKqX1K" type="audio/wav">
+    </audio>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

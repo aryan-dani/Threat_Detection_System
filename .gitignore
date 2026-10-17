@@ -20,6 +20,9 @@ __pycache__/
 # Ignore PyTorch model weights
 # Large model files can be excluded if you manage them separately or regenerate them
 *.pth
+*.pt
+weights/
+web_app/static/snapshots/*.jpg
 
 # Ignore log files and CSV data files
 # These can be large or environment-specific; 
